@@ -1,0 +1,53 @@
+.progress-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.progress-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  font-family: "Space Grotesk", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dc-text-muted);
+}
+
+.progress-count {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dc-text);
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 16px;
+  background: var(--dc-bg-muted);
+  border-radius: 8px;
+  border: 2px solid var(--dc-border-strong);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dc-accent), var(--dc-accent-hover));
+  border-radius: 6px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+}
+
+.progress-percent {
+  font-family: "Space Grotesk", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dc-accent);
+  text-align: right;
+}

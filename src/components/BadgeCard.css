@@ -1,0 +1,40 @@
+.badge-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 1rem;
+  border: 2px solid var(--dc-border-strong);
+  background: var(--dc-surface);
+  box-shadow: 4px 4px 0 0 var(--dc-shadow-offset);
+}
+
+.badge-card-icon {
+  font-size: 32px;
+  color: var(--dc-warning);
+  font-variation-settings: "FILL" 1;
+}
+
+.badge-card-body h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.badge-card-body p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--dc-text-muted);
+  line-height: 1.5;
+}
+
+.badge-card-time {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dc-accent);
+}
+
+.badge-card-time.muted {
+  color: var(--dc-text-muted);
+}

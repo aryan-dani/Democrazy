@@ -1,0 +1,126 @@
+.option-button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--dc-surface);
+  border: 2px solid var(--dc-border-strong);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dc-text);
+  box-shadow: 4px 4px 0px 0px var(--dc-shadow-offset);
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.option-button:hover:not(:disabled) {
+  background: var(--dc-bg-muted);
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0px 0px var(--dc-shadow-offset);
+}
+
+.option-button:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px 0px var(--dc-shadow-offset);
+}
+
+.option-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  border: 2px solid var(--dc-border-strong);
+  font-family: "Space Grotesk", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dc-accent);
+  background: var(--dc-surface-tint-strong);
+}
+
+.option-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.option-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* Correct state */
+.option-correct {
+  background: var(--dc-success-soft) !important;
+  border-color: var(--dc-success) !important;
+  box-shadow: 4px 4px 0px 0px var(--dc-success) !important;
+}
+
+.option-correct .option-letter {
+  background: var(--dc-success);
+  border-color: var(--dc-success);
+  color: var(--dc-on-accent-contrast);
+}
+
+.option-correct .option-icon {
+  color: var(--dc-success);
+}
+
+/* Wrong state */
+.option-wrong {
+  background: var(--dc-danger-soft) !important;
+  border-color: var(--dc-danger) !important;
+  box-shadow: 4px 4px 0px 0px var(--dc-danger) !important;
+}
+
+.option-wrong .option-letter {
+  background: var(--dc-danger);
+  border-color: var(--dc-danger);
+  color: var(--dc-on-accent-contrast);
+}
+
+.option-wrong .option-icon {
+  color: var(--dc-danger);
+}
+
+/* Highlight the correct answer when user chose wrong */
+.option-was-correct {
+  background: var(--dc-success-soft) !important;
+  border-color: var(--dc-success) !important;
+  border-style: dashed !important;
+}
+
+.option-was-correct .option-letter {
+  background: var(--dc-was-correct-letter-bg);
+  border-color: var(--dc-success);
+  color: var(--dc-success);
+}
+
+.option-agent-active {
+  background: var(--dc-peach-soft) !important;
+  border-color: var(--dc-peach-border) !important;
+  box-shadow: 3px 3px 0px 0px var(--dc-shadow-offset) !important;
+}
+
+.option-agent-active .option-letter {
+  background: var(--dc-peach-tint);
+  border-color: var(--dc-peach-border);
+  color: var(--dc-peach-ink);
+}
+
+/* Disabled state */
+.option-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.option-disabled:not(.option-correct):not(.option-wrong):not(.option-was-correct) {
+  box-shadow: 4px 4px 0px 0px var(--dc-scrollbar-thumb);
+  border-color: var(--dc-border);
+}

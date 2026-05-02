@@ -1,0 +1,158 @@
+.scenario-card {
+  background: var(--dc-surface);
+  border: 2px solid var(--dc-border-strong);
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 6px 6px 0px 0px var(--dc-shadow-offset);
+}
+
+.scenario-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.scenario-phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--dc-surface-tint-strong);
+  border: 2px solid var(--dc-border-strong);
+  border-radius: 999px;
+  font-family: "Space Grotesk", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dc-accent);
+}
+
+.scenario-phase-badge .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.scenario-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dc-text);
+  margin: 0;
+}
+
+.scenario-coach-banner {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: 2px dashed var(--dc-accent);
+  border-radius: 12px;
+  background: linear-gradient(130deg, var(--dc-coach-banner-a) 0%, var(--dc-coach-banner-b) 95%);
+  color: var(--dc-text);
+}
+
+.scenario-coach-banner .material-symbols-outlined {
+  font-variation-settings: "FILL" 1;
+  color: var(--dc-accent);
+}
+
+.scenario-coach-banner strong {
+  display: block;
+  font-family: "Space Grotesk", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.scenario-coach-banner p {
+  margin: 4px 0 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.scenario-text {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--dc-text);
+  margin: 0 0 28px 0;
+  padding: 20px;
+  background: var(--dc-surface-tint);
+  border-radius: 8px;
+  border-left: 4px solid var(--dc-accent);
+}
+
+.scenario-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.scenario-info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.info-card {
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid var(--dc-border-strong);
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: "Space Grotesk", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.info-card-header .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.info-card p {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--dc-text-muted);
+}
+
+.info-card-tip {
+  background: var(--dc-highlight-bg);
+  border-color: var(--dc-border-strong);
+}
+
+.info-card-tip .info-card-header {
+  color: var(--dc-highlight-fg);
+}
+
+.info-card-warning {
+  background: var(--dc-danger-soft);
+  border-color: var(--dc-border-strong);
+}
+
+.info-card-warning .info-card-header {
+  color: var(--dc-danger);
+}
+
+@media (max-width: 768px) {
+  .scenario-card {
+    padding: 20px;
+  }
+
+  .scenario-info-cards {
+    grid-template-columns: 1fr;
+  }
+}

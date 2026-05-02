@@ -1,0 +1,26 @@
+.dc-empty-state {
+  padding: 20px;
+  border: 2px dashed var(--dc-border);
+  border-radius: 1rem;
+  text-align: center;
+  background: var(--dc-bg-muted);
+  color: var(--dc-text-muted);
+}
+
+.dc-empty-icon {
+  font-size: 36px;
+  color: var(--dc-accent);
+  margin-bottom: 8px;
+}
+
+.dc-empty-state h4 {
+  margin: 0 0 6px;
+  color: var(--dc-text);
+  font-size: 16px;
+}
+
+.dc-empty-state p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}

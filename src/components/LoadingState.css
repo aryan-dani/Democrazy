@@ -1,0 +1,30 @@
+.dc-loading-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--dc-text-muted);
+}
+
+.dc-loading-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--dc-accent);
+  animation: dc-pulse-dot 1.1s infinite ease-in-out;
+}
+
+@keyframes dc-pulse-dot {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+}
