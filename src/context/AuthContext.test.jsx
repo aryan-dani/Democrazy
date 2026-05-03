@@ -54,7 +54,7 @@ describe("AuthContext", () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
     expect(screen.getByTestId("enabled")).toHaveTextContent("no");
     expect(screen.getByTestId("busy")).toHaveTextContent("no");
@@ -66,7 +66,7 @@ describe("AuthContext", () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
     expect(screen.getByTestId("enabled")).toHaveTextContent("yes");
     expect(screen.getByTestId("busy")).toHaveTextContent("no");
@@ -77,7 +77,7 @@ describe("AuthContext", () => {
     firebaseMod.isFirebaseConfigured.mockReturnValue(true);
     localStorage.setItem("democrazy_fb_sync_hint", "1");
     firebaseMod.loadFirebaseApp.mockResolvedValue({});
-    
+
     let triggerAuthCallback;
     mockOnAuthStateChanged.mockImplementation((auth, cb) => {
       triggerAuthCallback = cb;
@@ -87,7 +87,7 @@ describe("AuthContext", () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByTestId("enabled")).toHaveTextContent("yes");
@@ -116,7 +116,7 @@ describe("AuthContext", () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(localStorage.getItem("democrazy_fb_sync_hint")).toBeNull();
@@ -127,7 +127,7 @@ describe("AuthContext", () => {
     expect(firebaseMod.loadFirebaseApp).toHaveBeenCalled();
     expect(mockSignInWithPopup).toHaveBeenCalled();
   });
-  
+
   it("handles signOutUser", async () => {
     firebaseMod.isFirebaseConfigured.mockReturnValue(true);
     firebaseMod.loadFirebaseApp.mockResolvedValue({});
@@ -138,7 +138,7 @@ describe("AuthContext", () => {
     render(
       <AuthProvider>
         <Consumer />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     await userObj.click(screen.getByText("Sign Out"));

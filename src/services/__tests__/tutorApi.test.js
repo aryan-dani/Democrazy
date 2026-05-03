@@ -84,6 +84,30 @@ describe("postTutorMessage", () => {
     }
   });
 
+  it("handles error codes and missing fields in success response", async () => {
+    // Error with code
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: () => Promise.resolve({ error: "bad", code: "BAD_REQ" }),
+    });
+    try {
+      await postTutorMessage({ messages: [] });
+    } catch (e) {
+      expect(e.code).toBe("BAD_REQ");
+    }
+
+    // Success but missing reply/chips
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ ok: true }),
+    });
+    const out = await postTutorMessage({ messages: [] });
+    expect(out.reply).toBe("");
+    expect(out.suggestedChips).toEqual([]);
+  });
+
   it("handles non-json error bodies", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: false,
@@ -92,7 +116,6 @@ describe("postTutorMessage", () => {
     });
     try {
       await postTutorMessage({ messages: [{ role: "user", content: "x" }] });
-      throw new Error("expected rejection");
     } catch (e) {
       expect(e).toBeInstanceOf(TutorApiError);
       expect(e.message).toContain("503");

@@ -50,7 +50,10 @@ describe("FirestoreProgressBridge", () => {
     cleanup();
   });
 
-  const flush = async () => act(async () => { await Promise.resolve(); });
+  const flush = async () =>
+    act(async () => {
+      await Promise.resolve();
+    });
 
   it("mounts silently when firebase is unavailable", () => {
     firebaseMod.isFirebaseConfigured.mockReturnValue(false);
@@ -68,7 +71,7 @@ describe("FirestoreProgressBridge", () => {
     firebaseMod.loadFirebaseApp.mockResolvedValue({});
     mockGetFirestore.mockReturnValue({});
     mockDoc.mockReturnValue("mock-ref");
-    
+
     const mockMerge = vi.fn();
     useProgressMod.useProgress.mockReturnValue({
       progress: { score: 10 },
@@ -110,10 +113,6 @@ describe("FirestoreProgressBridge", () => {
       await vi.runAllTimersAsync();
     });
 
-    expect(mockSetDoc).toHaveBeenCalledWith(
-      "mock-ref",
-      { score: 30 },
-      { merge: true }
-    );
+    expect(mockSetDoc).toHaveBeenCalledWith("mock-ref", { score: 30 }, { merge: true });
   });
 });

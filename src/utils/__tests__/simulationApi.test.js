@@ -10,17 +10,17 @@ describe("simulationApi", () => {
 
   it("handles ok:false explicitly inside json", async () => {
     import.meta.env.VITE_API_ORIGIN = "http://localhost";
-    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce({
+    vi.spyOn(global, "fetch").mockResolvedValue({
       ok: true,
       status: 200,
       json: () => Promise.resolve({ ok: false, error: "Model declined", code: "TEST_CODE" }),
     });
 
-    await expect(postSimulationTurn({ test: true })).rejects.toThrowError(SimulationApiError);
-    await expect(postSimulationTurn({ test: true })).rejects.toThrow("Model declined");
+    const promise = postSimulationTurn({ test: true });
+    await expect(promise).rejects.toThrowError(SimulationApiError);
+    await expect(promise).rejects.toThrow("Model declined");
     
-    // restore for second test
-    fetchSpy.mockRestore();
+    vi.restoreAllMocks();
     
     vi.spyOn(global, "fetch").mockResolvedValueOnce({
       ok: true,
@@ -45,5 +45,60 @@ describe("simulationApi", () => {
     expect(res.data).toBe("test");
 
     import.meta.env.VITE_API_ORIGIN = originalEnv;
+  });
+
+  it("handles 429 and 503 errors with retry logic", async () => {
+    import.meta.env.VITE_API_ORIGIN = "http://localhost";
+    
+    // 429 Rate Limit
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 429,
+      json: () => Promise.resolve({ error: "Too many requests" }),
+    });
+    try {
+      await postSimulationTurn({});
+    } catch (err) {
+      expect(err.status).toBe(429);
+      expect(err.retryAfterSec).toBe(60);
+    }
+
+    // 503 Model Unavailable
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 503,
+      json: () => Promise.resolve({ error: "Server busy", code: "MODEL_UNAVAILABLE" }),
+    });
+    try {
+      await postSimulationTurn({});
+    } catch (err) {
+      expect(err.status).toBe(503);
+      expect(err.retryAfterSec).toBe(30);
+    }
+
+    // 503 with NO_API_KEY
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 503,
+      json: () => Promise.resolve({ error: "No key", code: "NO_API_KEY" }),
+    });
+    try {
+      await postSimulationTurn({});
+    } catch (err) {
+      expect(err.retryAfterSec).toBeUndefined();
+    }
+  });
+
+  it("respects server-provided retryAfterSec", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 429,
+      json: () => Promise.resolve({ error: "Retry soon", retryAfterSec: 10 }),
+    });
+    try {
+      await postSimulationTurn({});
+    } catch (err) {
+      expect(err.retryAfterSec).toBe(10);
+    }
   });
 });

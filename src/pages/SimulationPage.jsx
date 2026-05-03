@@ -24,7 +24,12 @@ function resolvePackId(raw) {
   return scenarioPacks[0]?.id ?? "election-prep";
 }
 
-const ScenarioToolbar = memo(function ScenarioToolbar({ mode, packId, onPackChange, onModeChange }) {
+const ScenarioToolbar = memo(function ScenarioToolbar({
+  mode,
+  packId,
+  onPackChange,
+  onModeChange,
+}) {
   return (
     <div className="sim-toolbar" aria-label="Simulation controls">
       <div className="sim-toolbar-cluster">
@@ -402,9 +407,15 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
   const blockingError = Boolean(agentError && !offlineMode);
 
   const handlePackChangeComplete = useCallback((id) => onAdjustQuery(id, "agent"), [onAdjustQuery]);
-  const handleModeChangeComplete = useCallback((next) => onAdjustQuery(packId, next), [packId, onAdjustQuery]);
+  const handleModeChangeComplete = useCallback(
+    (next) => onAdjustQuery(packId, next),
+    [packId, onAdjustQuery],
+  );
   const handlePackChange = useCallback((id) => onAdjustQuery(id, "agent"), [onAdjustQuery]);
-  const handleModeChange = useCallback((next) => onAdjustQuery(packId, next), [packId, onAdjustQuery]);
+  const handleModeChange = useCallback(
+    (next) => onAdjustQuery(packId, next),
+    [packId, onAdjustQuery],
+  );
 
   const handleAdaptiveChoice = useCallback(
     async (idx) => {

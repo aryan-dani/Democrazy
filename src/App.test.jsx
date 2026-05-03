@@ -1,3 +1,4 @@
+/** @vitest-environment jsdom */
 import { render } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import App from "./App";
@@ -16,10 +17,10 @@ vi.mock("./pages/LandingPage", () => ({
 }));
 
 describe("App Router", () => {
-  it("renders main components and default route", () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId("mock-navbar")).toBeInTheDocument();
-    expect(getByTestId("mock-ai-drawer")).toBeInTheDocument();
-    expect(getByTestId("mock-fs-bridge")).toBeInTheDocument();
+  it("renders main components and default route", async () => {
+    const { findByTestId } = render(<App />);
+    expect(await findByTestId("mock-navbar")).toBeInTheDocument();
+    expect(await findByTestId("mock-ai-drawer")).toBeInTheDocument();
+    expect(await findByTestId("mock-fs-bridge")).toBeInTheDocument();
   });
 });

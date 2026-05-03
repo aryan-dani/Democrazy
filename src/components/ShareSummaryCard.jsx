@@ -10,7 +10,13 @@ async function loadHtmlToImage() {
  * Styled card for OG-like sharing; downloadable PNG via html-to-image (loaded on demand).
  * @param {{ title:string; headline:string; scoreLabel:string; sublabel?:string; badges?:string[] }} props
  */
-const ShareSummaryCard = memo(function ShareSummaryCard({ title, headline, scoreLabel, sublabel, badges = [] }) {
+const ShareSummaryCard = memo(function ShareSummaryCard({
+  title,
+  headline,
+  scoreLabel,
+  sublabel,
+  badges = [],
+}) {
   const ref = useRef(null);
 
   const download = async () => {

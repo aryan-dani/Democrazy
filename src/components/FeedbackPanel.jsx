@@ -74,13 +74,17 @@ const FeedbackPanel = memo(function FeedbackPanel({
         ) : (
           <div className="feedback-recovery-actions">
             <button className="btn-retry" onClick={onRetry} id="btn-retry" type="button">
-              <span className="material-symbols-outlined" aria-hidden="true">refresh</span>
+              <span className="material-symbols-outlined" aria-hidden="true">
+                refresh
+              </span>
               <span>Try again</span>
             </button>
             {typeof onContinueAnyway === "function" ? (
               <button className="btn-continue-soft" type="button" onClick={onContinueAnyway}>
                 <span>{continueAnywayLabel}</span>
-                <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  arrow_forward
+                </span>
               </button>
             ) : null}
           </div>

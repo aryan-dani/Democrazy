@@ -47,7 +47,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(await screen.findByText(/Could not load this pack/i)).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("SimulationPage", () => {
         },
       ];
       simDataMod.loadPackSteps.mockResolvedValue(mockSteps);
-      
+
       useSimMod.useSimulation.mockReturnValue({
         currentStep: 0,
         selectedOption: null,
@@ -86,7 +86,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(await screen.findByText(/This is a scripted scenario/i)).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(screen.getByText(/Gemini is authoring your dilemma/i)).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe("SimulationPage", () => {
     it("renders error state and offline fallback correctly", () => {
       const mockRestart = vi.fn();
       const mockOffline = vi.fn();
-      
+
       agenticSimMod.useAgenticSimulation.mockReturnValue({
         scene: null,
         loading: false,
@@ -150,12 +150,12 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(screen.getByText(/API is down/i)).toBeInTheDocument();
       expect(screen.getByText(/RATE LIMIT/i)).toBeInTheDocument();
-      
+
       const retryBtn = screen.getByRole("button", { name: /Retry with Gemini/i });
       expect(retryBtn).toBeDisabled();
 
@@ -191,7 +191,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(screen.getByText(/Agentic scenario test/i)).toBeInTheDocument();
@@ -222,7 +222,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       const scriptedBtn = screen.getByRole("button", { name: /Scripted pack only/i });
@@ -256,18 +256,39 @@ describe("SimulationPage", () => {
               <Route path="/quiz" element={<div>Quiz Page Redirected</div>} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       expect(screen.getByText(/Gemini session complete!/i)).toBeInTheDocument();
 
-      const quizBtn = screen.getByRole("button", { name: /Take the Quiz/i });
-      await user.click(quizBtn);
-      expect(screen.getByText("Quiz Page Redirected")).toBeInTheDocument();
-
       const rerunBtn = screen.getByRole("button", { name: /Rerun adaptive sim/i });
       await user.click(rerunBtn);
       expect(mockRestart).toHaveBeenCalled();
+
+      // Test Toolbar in completed state
+      const packSelect = screen.getByLabelText(/Scenario pack/i);
+      await user.selectOptions(packSelect, "local-civic");
+
+      const quizBtn = screen.getByRole("button", { name: /Take the Quiz/i });
+      await user.click(quizBtn);
+      expect(screen.getByText("Quiz Page Redirected")).toBeInTheDocument();
+    });
+
+    it("renders classic sim error state", async () => {
+      // We need to mock loadPackSteps to fail
+      vi.spyOn(simDataMod, "loadPackSteps").mockRejectedValueOnce(new Error("Load failed"));
+
+      render(
+        <ProgressProvider>
+          <MemoryRouter initialEntries={["/simulation?mode=classic&pack=election-prep"]}>
+            <Routes>
+              <Route path="/simulation" element={<SimulationPage />} />
+            </Routes>
+          </MemoryRouter>
+        </ProgressProvider>,
+      );
+
+      expect(await screen.findByText(/Could not load this pack/i)).toBeInTheDocument();
     });
 
     it("can retry Gemini on agent error when available", async () => {
@@ -295,7 +316,7 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       const retryBtn = screen.getByRole("button", { name: /Retry with Gemini/i });
@@ -331,15 +352,15 @@ describe("SimulationPage", () => {
               <Route path="/simulation" element={<SimulationPage />} />
             </Routes>
           </MemoryRouter>
-        </ProgressProvider>
+        </ProgressProvider>,
       );
 
       // Change Pack
-      const packSelect = screen.getByLabelText(/Pack/i);
-      await user.selectOptions(packSelect, "voter-rights");
+      const packSelect = screen.getByLabelText(/Scenario pack/i);
+      await user.selectOptions(packSelect, "local-civic");
       // Change Mode
-      const modeSelect = screen.getByLabelText(/Mode/i);
-      await user.selectOptions(modeSelect, "classic");
+      const classicBtn = screen.getByRole("button", { name: /Classic script/i });
+      await user.click(classicBtn);
     });
   });
 });

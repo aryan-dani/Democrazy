@@ -43,21 +43,21 @@ describe("QuizPage", () => {
       const q = quizQuestions[i];
       const correctIndex = q.options.findIndex((opt) => opt.correct);
       const incorrectIndex = q.options.findIndex((opt) => !opt.correct);
-      
+
       // For question 0, answer incorrectly first to test "Try again"
       if (i === 0) {
         await user.click(screen.getByText(q.options[incorrectIndex].text).closest("button"));
         expect(screen.getByText(/Here's what happened/i)).toBeInTheDocument();
-        
+
         // click Try Again
         await user.click(screen.getByRole("button", { name: /Try again/i }));
       }
-      
+
       // Answer correctly
       await user.click(screen.getByText(q.options[correctIndex].text).closest("button"));
-      
+
       expect(screen.getByText(/Correct!/i)).toBeInTheDocument();
-      
+
       // click Next question / See results
       const btnName = i === quizQuestions.length - 1 ? /See results/i : /Next question/i;
       await user.click(screen.getByRole("button", { name: btnName }));
@@ -65,13 +65,15 @@ describe("QuizPage", () => {
 
     // Finished
     expect(screen.getByRole("heading", { name: /Quiz complete/i })).toBeInTheDocument();
-    
+
     // Check score
-    expect(screen.getAllByText(`${quizQuestions.length}/${quizQuestions.length}`)[0]).toBeInTheDocument();
+    expect(
+      screen.getAllByText(`${quizQuestions.length}/${quizQuestions.length}`)[0],
+    ).toBeInTheDocument();
 
     // Retake quiz
     await user.click(screen.getByRole("button", { name: /Retake quiz/i }));
-    
+
     // Should be back to question 1
     expect(screen.getByRole("heading", { name: /knowledge quiz/i })).toBeInTheDocument();
   });
@@ -84,7 +86,7 @@ describe("QuizPage", () => {
     const q1 = quizQuestions[0];
     const incorrectIndex = q1.options.findIndex((opt) => !opt.correct);
     await user.click(screen.getByText(q1.options[incorrectIndex].text).closest("button"));
-    
+
     // Skip question (counts as missed)
     await user.click(screen.getByRole("button", { name: /Next question \(counts as missed\)/i }));
 

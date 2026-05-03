@@ -31,4 +31,12 @@ describe("trackEvent", () => {
     trackEvent("second", {});
     expect(document.head.querySelectorAll("script[src*='googletagmanager']").length).toBe(1);
   });
+
+  it("safely handles missing gtag", async () => {
+    vi.unstubAllEnvs(); // No measurement ID
+    const { trackEvent } = await import("../analytics.js?nocache=" + Math.random());
+    trackEvent("test_no_ga", { x: 1 });
+    // Should not crash
+    expect(window.gtag).toBeUndefined();
+  });
 });

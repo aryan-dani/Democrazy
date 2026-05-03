@@ -31,7 +31,10 @@ describe("useAgenticSimulation", () => {
     vi.useRealTimers();
   });
 
-  const flush = async () => act(async () => { await Promise.resolve(); });
+  const flush = async () =>
+    act(async () => {
+      await Promise.resolve();
+    });
 
   const mockPayload = {
     ok: true,
@@ -53,7 +56,7 @@ describe("useAgenticSimulation", () => {
     simApi.postSimulationTurn.mockResolvedValueOnce(mockPayload);
 
     const { result } = renderHook(() =>
-      useAgenticSimulation({ packId: "test-pack", enabled: true })
+      useAgenticSimulation({ packId: "test-pack", enabled: true }),
     );
 
     expect(result.current.loading).toBe(true);
@@ -71,11 +74,11 @@ describe("useAgenticSimulation", () => {
 
   it("handles network error and retries correctly", async () => {
     simApi.postSimulationTurn.mockRejectedValueOnce(
-      new simApi.SimulationApiError("Rate limited", 429, "RATE_LIMIT", null)
+      new simApi.SimulationApiError("Rate limited", 429, "RATE_LIMIT", null),
     );
 
     const { result } = renderHook(() =>
-      useAgenticSimulation({ packId: "test-pack", enabled: true })
+      useAgenticSimulation({ packId: "test-pack", enabled: true }),
     );
 
     await flush();
@@ -100,7 +103,7 @@ describe("useAgenticSimulation", () => {
     simApi.postSimulationTurn.mockRejectedValueOnce(new Error("Network failed"));
 
     const { result } = renderHook(() =>
-      useAgenticSimulation({ packId: "test-pack", enabled: true })
+      useAgenticSimulation({ packId: "test-pack", enabled: true }),
     );
 
     await flush();
@@ -125,15 +128,13 @@ describe("useAgenticSimulation", () => {
   });
 
   it("allows choosing an option and advancing", async () => {
-    simApi.postSimulationTurn
-      .mockResolvedValueOnce(mockPayload)
-      .mockResolvedValueOnce({
-        ...mockPayload,
-        worldState: { ...mockPayload.worldState, turnIndex: 2 },
-      });
+    simApi.postSimulationTurn.mockResolvedValueOnce(mockPayload).mockResolvedValueOnce({
+      ...mockPayload,
+      worldState: { ...mockPayload.worldState, turnIndex: 2 },
+    });
 
     const { result } = renderHook(() =>
-      useAgenticSimulation({ packId: "test-pack", enabled: true })
+      useAgenticSimulation({ packId: "test-pack", enabled: true }),
     );
 
     await flush();
@@ -150,11 +151,11 @@ describe("useAgenticSimulation", () => {
 
   it("respects retryAfterSec from the API", async () => {
     simApi.postSimulationTurn.mockRejectedValueOnce(
-      new simApi.SimulationApiError("Wait a bit", 429, "RATE_LIMIT", 10)
+      new simApi.SimulationApiError("Wait a bit", 429, "RATE_LIMIT", 10),
     );
 
     const { result } = renderHook(() =>
-      useAgenticSimulation({ packId: "test-pack", enabled: true })
+      useAgenticSimulation({ packId: "test-pack", enabled: true }),
     );
 
     await flush();
