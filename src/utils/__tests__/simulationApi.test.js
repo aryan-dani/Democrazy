@@ -19,15 +19,15 @@ describe("simulationApi", () => {
     const promise = postSimulationTurn({ test: true });
     await expect(promise).rejects.toThrowError(SimulationApiError);
     await expect(promise).rejects.toThrow("Model declined");
-    
+
     vi.restoreAllMocks();
-    
+
     vi.spyOn(global, "fetch").mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve({ ok: false }), // without error/code
     });
-    
+
     await expect(postSimulationTurn({ test: true })).rejects.toThrow("Model declined");
   });
 
@@ -49,7 +49,7 @@ describe("simulationApi", () => {
 
   it("handles 429 and 503 errors with retry logic", async () => {
     import.meta.env.VITE_API_ORIGIN = "http://localhost";
-    
+
     // 429 Rate Limit
     vi.spyOn(global, "fetch").mockResolvedValueOnce({
       ok: false,
