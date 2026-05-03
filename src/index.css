@@ -26,8 +26,12 @@
   --dc-surface-tint: #171f33;
   --dc-surface-tint-strong: #1f2942;
   --dc-accent-panel: #1f2840;
-  --dc-highlight-bg: #c9a02e;
-  --dc-highlight-fg: #f8f5e6;
+  /* Tip / highlight: subdued surface so dark mode stays calm; pair with --dc-highlight-body for body copy */
+  --dc-highlight-bg: #252019;
+  --dc-highlight-fg: #f5d873;
+  --dc-highlight-body: #ede9df;
+  --dc-highlight-border: rgba(251, 191, 36, 0.38);
+  --dc-highlight-stripe: rgba(251, 191, 36, 0.75);
   --dc-toggle-warm-active: #d97706;
   --dc-danger-ink: #fec8c8;
   --dc-danger-border-strong: #b91c1c;
@@ -70,6 +74,9 @@
   --dc-accent-panel: #e8e9ff;
   --dc-highlight-bg: #ffe083;
   --dc-highlight-fg: #4e3e00;
+  --dc-highlight-body: #3f3518;
+  --dc-highlight-border: var(--dc-border-strong);
+  --dc-highlight-stripe: rgba(78, 62, 0, 0.32);
   --dc-toggle-warm-active: #ffb347;
   --dc-danger-ink: #7f1d1d;
   --dc-danger-border-strong: #b91c1c;

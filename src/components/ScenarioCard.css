@@ -131,11 +131,16 @@
 
 .info-card-tip {
   background: var(--dc-highlight-bg);
-  border-color: var(--dc-border-strong);
+  border-color: var(--dc-highlight-border);
+  box-shadow: inset 3px 0 0 var(--dc-highlight-stripe);
 }
 
 .info-card-tip .info-card-header {
   color: var(--dc-highlight-fg);
+}
+
+.info-card-tip p {
+  color: var(--dc-highlight-body);
 }
 
 .info-card-warning {
@@ -145,6 +150,10 @@
 
 .info-card-warning .info-card-header {
   color: var(--dc-danger);
+}
+
+.info-card-warning p {
+  color: var(--dc-danger-ink);
 }
 
 @media (max-width: 768px) {
