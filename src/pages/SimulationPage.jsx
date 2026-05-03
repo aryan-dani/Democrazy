@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import {
-  scenarioPacks,
-  pickPackSteps,
-} from "../data/simulationData";
+import { scenarioPacks, pickPackSteps } from "../data/simulationData";
 
 import { useSimulation } from "../hooks/useSimulation";
 import { useAgenticSimulation } from "../hooks/useAgenticSimulation";
@@ -105,7 +102,6 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
     const raw = progressRef.current.classicSessionByPack?.[packId]?.step ?? 0;
     const saved = Math.min(Math.max(Number(raw), 0), cap);
     resetSimulation({ startAt: saved });
-     
   }, [packId, steps.length, resetSimulation]);
 
   const persistClassicAdvance = () => {
@@ -140,7 +136,12 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
   if (isComplete) {
     return (
       <div className="sim-page-shell">
-        <ScenarioToolbar mode="classic" packId={packId} onPackChange={(id) => onAdjustQuery(id, "classic")} onModeChange={(next) => onAdjustQuery(packId, next)} />
+        <ScenarioToolbar
+          mode="classic"
+          packId={packId}
+          onPackChange={(id) => onAdjustQuery(id, "classic")}
+          onModeChange={(next) => onAdjustQuery(packId, next)}
+        />
         <div className="simulation-page" id="simulation-page">
           <div className="simulation-complete">
             <div className="complete-icon-wrap">
@@ -148,9 +149,9 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
             </div>
             <h2>Classic simulation complete!</h2>
             <p>
-              You finished all {totalSteps} scripted beats inside {packMeta.title}. Prefer branching,
-              cinematic consequences? Toggle Adaptive mode for a Gemini-powered run grounded in this
-              theme.
+              You finished all {totalSteps} scripted beats inside {packMeta.title}. Prefer
+              branching, cinematic consequences? Toggle Adaptive mode for a Gemini-powered run
+              grounded in this theme.
             </p>
             <div className="complete-actions">
               <button
@@ -187,7 +188,12 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
 
   return (
     <div className="sim-page-shell">
-      <ScenarioToolbar mode="classic" packId={packId} onPackChange={(id) => onAdjustQuery(id, "classic")} onModeChange={(next) => onAdjustQuery(packId, next)} />
+      <ScenarioToolbar
+        mode="classic"
+        packId={packId}
+        onPackChange={(id) => onAdjustQuery(id, "classic")}
+        onModeChange={(next) => onAdjustQuery(packId, next)}
+      />
       <div className="simulation-page" id="simulation-page">
         <div className="simulation-sidebar">
           <h2 className="sidebar-title">Simulation Hub</h2>
@@ -200,7 +206,11 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
                 className={`step-item ${idx === currentStep ? "step-active" : ""} ${idx < currentStep ? "step-done" : ""}`}
               >
                 <span className="step-dot">
-                  {idx < currentStep ? <span className="material-symbols-outlined">check</span> : idx + 1}
+                  {idx < currentStep ? (
+                    <span className="material-symbols-outlined">check</span>
+                  ) : (
+                    idx + 1
+                  )}
                 </span>
                 <span className="step-name">{step.phase}</span>
               </div>
@@ -310,7 +320,12 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
   if (completed) {
     return (
       <div className="sim-page-shell">
-        <ScenarioToolbar mode="agent" packId={packId} onPackChange={(id) => onAdjustQuery(id, "agent")} onModeChange={(next) => onAdjustQuery(packId, next)} />
+        <ScenarioToolbar
+          mode="agent"
+          packId={packId}
+          onPackChange={(id) => onAdjustQuery(id, "agent")}
+          onModeChange={(next) => onAdjustQuery(packId, next)}
+        />
         <div className="simulation-page" id="simulation-page">
           <div className="simulation-complete">
             <div className="complete-icon-wrap">
@@ -318,14 +333,17 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
             </div>
             <h2>{offlineMode ? "Offline session complete!" : "Gemini session complete!"}</h2>
             <p>
-              You completed {worldState.turnIndex}/{maxTurns} adaptive beats for {packMeta.title}.
-              {" "}
+              You completed {worldState.turnIndex}/{maxTurns} adaptive beats for {packMeta.title}.{" "}
               {offlineMode
                 ? "Practice used the scripted pack storyline while the AI was unavailable."
                 : "Gemini replies are illustrative—always corroborate with official election resources."}
             </p>
             <div className="complete-actions">
-              <button className="btn-primary-hero" onClick={() => navigate("/quiz?from=sim")} type="button">
+              <button
+                className="btn-primary-hero"
+                onClick={() => navigate("/quiz?from=sim")}
+                type="button"
+              >
                 <span>Take the Quiz</span>
               </button>
               <button className="btn-secondary-hero" onClick={() => restart()} type="button">
@@ -358,16 +376,22 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
 
   const progressCurrent =
     blockingError && !scene ? 0 : loading && !scene ? 0 : worldState.turnIndex;
-  const safeTitle = loading && !scene ? "Spinning up your session…" : `Turn ${worldState.turnIndex}`;
+  const safeTitle =
+    loading && !scene ? "Spinning up your session…" : `Turn ${worldState.turnIndex}`;
   const phaseLabel = offlineMode
-    ? scene?.phase ?? "Offline practice"
+    ? (scene?.phase ?? "Offline practice")
     : blockingError && !scene
       ? "Gemini paused"
-      : scene?.phase ?? (loading && !scene ? "Contacting Gemini…" : "—");
+      : (scene?.phase ?? (loading && !scene ? "Contacting Gemini…" : "—"));
 
   return (
     <div className="sim-page-shell">
-      <ScenarioToolbar mode="agent" packId={packId} onPackChange={(id) => onAdjustQuery(id, "agent")} onModeChange={(next) => onAdjustQuery(packId, next)} />
+      <ScenarioToolbar
+        mode="agent"
+        packId={packId}
+        onPackChange={(id) => onAdjustQuery(id, "agent")}
+        onModeChange={(next) => onAdjustQuery(packId, next)}
+      />
       <div className="simulation-page" id="simulation-page">
         <div className="simulation-sidebar">
           <h2 className="sidebar-title">Adaptive Studio</h2>
@@ -395,7 +419,8 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
               <p className="sim-error-message">{agentError.message}</p>
               {!canRetryGemini && secondsUntilRetry > 0 ? (
                 <p className="sim-retry-countdown">
-                  Automated backoff: retry opens in ~{secondsUntilRetry}s to avoid hammering the API.
+                  Automated backoff: retry opens in ~{secondsUntilRetry}s to avoid hammering the
+                  API.
                 </p>
               ) : null}
               <div className="sim-error-actions">
@@ -504,8 +529,12 @@ export default function SimulationPage() {
   };
 
   if (mode === "agent") {
-    return <AgentSimulationExperience key={packId} packId={packId} onAdjustQuery={handleAdjustQuery} />;
+    return (
+      <AgentSimulationExperience key={packId} packId={packId} onAdjustQuery={handleAdjustQuery} />
+    );
   }
 
-  return <ClassicSimulationExperience key={packId} packId={packId} onAdjustQuery={handleAdjustQuery} />;
+  return (
+    <ClassicSimulationExperience key={packId} packId={packId} onAdjustQuery={handleAdjustQuery} />
+  );
 }

@@ -17,10 +17,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar" id="main-navbar">
+    <nav className="navbar" id="main-navbar" aria-label="Primary">
       <div className="navbar-brand">
         <NavLink to="/" className="navbar-logo">
-          <span className="material-symbols-outlined logo-icon">how_to_vote</span>
+          <span className="material-symbols-outlined logo-icon" aria-hidden>
+            how_to_vote
+          </span>
           <span className="logo-text">Democrazy</span>
         </NavLink>
       </div>
@@ -30,7 +32,9 @@ export default function Navbar() {
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           id="nav-dashboard"
         >
-          <span className="material-symbols-outlined">dashboard</span>
+          <span className="material-symbols-outlined" aria-hidden>
+            dashboard
+          </span>
           <span>Dashboard</span>
         </NavLink>
         <NavLink
@@ -38,7 +42,9 @@ export default function Navbar() {
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           id="nav-simulation"
         >
-          <span className="material-symbols-outlined">play_circle</span>
+          <span className="material-symbols-outlined" aria-hidden>
+            play_circle
+          </span>
           <span>Simulations</span>
         </NavLink>
         <NavLink
@@ -46,11 +52,19 @@ export default function Navbar() {
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           id="nav-timeline"
         >
-          <span className="material-symbols-outlined">timeline</span>
+          <span className="material-symbols-outlined" aria-hidden>
+            timeline
+          </span>
           <span>Timeline</span>
         </NavLink>
-        <NavLink to="/quiz" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} id="nav-quiz">
-          <span className="material-symbols-outlined">quiz</span>
+        <NavLink
+          to="/quiz"
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          id="nav-quiz"
+        >
+          <span className="material-symbols-outlined" aria-hidden>
+            quiz
+          </span>
           <span>Quizzes</span>
         </NavLink>
       </div>
@@ -60,13 +74,26 @@ export default function Navbar() {
             {busy ? (
               <span className="navbar-auth-hint">Signing in…</span>
             ) : user ? (
-              <button type="button" className="google-sync-btn" onClick={() => signOutUser()} title={user.email ?? ""}>
-                <span className="material-symbols-outlined">logout</span>
+              <button
+                type="button"
+                className="google-sync-btn"
+                onClick={() => signOutUser()}
+                title={user.email ?? ""}
+              >
+                <span className="material-symbols-outlined" aria-hidden>
+                  logout
+                </span>
                 <span>Sign out</span>
               </button>
             ) : (
-              <button type="button" className="google-sync-btn primary" onClick={() => signInGoogle()}>
-                <span className="material-symbols-outlined">account_circle</span>
+              <button
+                type="button"
+                className="google-sync-btn primary"
+                onClick={() => signInGoogle()}
+              >
+                <span className="material-symbols-outlined" aria-hidden>
+                  account_circle
+                </span>
                 <span>Google sync</span>
               </button>
             )}
@@ -79,7 +106,9 @@ export default function Navbar() {
           aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           title={theme === "dark" ? "Light mode" : "Dark mode"}
         >
-          <span className="material-symbols-outlined">{theme === "dark" ? "light_mode" : "dark_mode"}</span>
+          <span className="material-symbols-outlined" aria-hidden>
+            {theme === "dark" ? "light_mode" : "dark_mode"}
+          </span>
         </button>
         <div className="navbar-phase">
           <span className="phase-label">Stack</span>

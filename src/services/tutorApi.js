@@ -34,8 +34,7 @@ export async function postTutorMessage(payload) {
     throw new TutorApiError(message, {
       status: res.status,
       code: typeof json?.code === "string" ? json.code : undefined,
-      retryAfterSec:
-        typeof json?.retryAfterSec === "number" ? json.retryAfterSec : undefined,
+      retryAfterSec: typeof json?.retryAfterSec === "number" ? json.retryAfterSec : undefined,
     });
   }
 

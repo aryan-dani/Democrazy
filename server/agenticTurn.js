@@ -172,7 +172,7 @@ Tone: ${brief.tone}
     const text =
       typeof result.response?.text === "function"
         ? result.response.text()
-        : result.response?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") ?? "";
+        : (result.response?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") ?? "");
     if (!text) {
       return {
         ok: false,

@@ -48,9 +48,8 @@ export default function LandingPage() {
           <span className="hero-highlight">Ready to vote?</span>
         </h1>
         <p className="hero-subtitle">
-          Navigate the democratic process with confidence. Take simulations,
-          learn the timeline, and track your progress to become an informed
-          voter.
+          Navigate the democratic process with confidence. Take simulations, learn the timeline, and
+          track your progress to become an informed voter.
         </p>
         <div className="hero-actions">
           <button

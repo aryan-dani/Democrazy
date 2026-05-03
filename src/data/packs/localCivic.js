@@ -63,8 +63,7 @@ export const localCivicSteps = [
       "Public records regimes exist so residents can inspect how decisions are influenced. Procedures vary — follow your clerk's instructions diligently.",
     didYouKnow:
       "Fees for copies or redactions are common; narrowing your request lowers cost and turnaround time.",
-    pitfall:
-      "Assuming verbal denials equal final answers — appeal processes often exist.",
+    pitfall: "Assuming verbal denials equal final answers — appeal processes often exist.",
   },
   {
     id: 11,
@@ -93,8 +92,7 @@ export const localCivicSteps = [
     ],
     explanation:
       "Commissions marry expertise and constituency stories. Showing up repeatedly signals sustained priority.",
-    didYouKnow:
-      "Some bodies stream meetings — lurk first if you're nervous.",
+    didYouKnow: "Some bodies stream meetings — lurk first if you're nervous.",
     pitfall:
       "Letting a single-interest bloc appear unanimous when silent residents disagree quietly.",
   },
@@ -113,8 +111,7 @@ export const localCivicSteps = [
       {
         text: "Co-host multilingual explainer flyers with civic orgs plus office hours translating the ballot workbook",
         correct: true,
-        feedback:
-          "Design justice means removing language and trust barriers BEFORE voting closes.",
+        feedback: "Design justice means removing language and trust barriers BEFORE voting closes.",
       },
       {
         text: "Game the tally by forging duplicate ballots",
@@ -125,10 +122,8 @@ export const localCivicSteps = [
     ],
     explanation:
       "Budgeting demos show democracies can distribute voice beyond ballots if inclusion is intentional.",
-    didYouKnow:
-      "Hybrid online + kiosk voting helps workers with irregular shifts.",
-    pitfall:
-      "Assuming 'open to all' without proactive translation still excludes.",
+    didYouKnow: "Hybrid online + kiosk voting helps workers with irregular shifts.",
+    pitfall: "Assuming 'open to all' without proactive translation still excludes.",
   },
   {
     id: 13,
@@ -145,21 +140,18 @@ export const localCivicSteps = [
       {
         text: "Read the certified ballot title plus fiscal impact analyst note, debate tradeoffs at a community forum",
         correct: true,
-        feedback:
-          "Direct democracy still demands homework — summaries omit implementation edges.",
+        feedback: "Direct democracy still demands homework — summaries omit implementation edges.",
       },
       {
         text: "Vandalize opposing yard signs illegally",
         correct: false,
-        feedback:
-          "Coercion sabotages legitimacy even if frustrations run hot.",
+        feedback: "Coercion sabotages legitimacy even if frustrations run hot.",
       },
     ],
     explanation:
       "Ballot initiatives compress complex governance changes — cross-check proponents AND opponents.",
     didYouKnow:
       "Courts occasionally remove measures with misleading descriptions — verify latest filings.",
-    pitfall:
-      "Single-issue zeal can blind voters to unintended administrative burdens.",
+    pitfall: "Single-issue zeal can blind voters to unintended administrative burdens.",
   },
 ];

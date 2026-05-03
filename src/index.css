@@ -125,6 +125,42 @@ img {
   outline-offset: 3px;
 }
 
+.skip-to-content {
+  position: fixed;
+  left: 1rem;
+  top: 0;
+  z-index: 11000;
+  padding: 0.5rem 1rem;
+  background: var(--dc-accent);
+  color: var(--dc-on-accent-contrast);
+  text-decoration: none;
+  border-radius: 0 0 0.625rem 0.625rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  transform: translateY(-140%);
+  transition: transform 0.18s ease;
+}
+
+.skip-to-content:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--dc-focus-ring-accent);
+  outline-offset: 3px;
+}
+
+#main-content {
+  outline: none;
+}
+
+.dc-route-fallback {
+  padding: 2rem;
+}
+
+#main-content:focus-visible {
+  outline: 2px solid var(--dc-focus-ring-accent);
+  outline-offset: 4px;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

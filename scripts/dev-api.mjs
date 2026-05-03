@@ -9,6 +9,8 @@ import { fileURLToPath, URL } from "node:url";
 import dotenv from "dotenv";
 import http from "node:http";
 
+import { parseJsonBodyOnce } from "../server/parseJsonBodyOnce.js";
+import { setDemocrazyCorsHeaders } from "../server/httpCors.js";
 import { runAgenticTurn } from "../server/agenticTurn.js";
 import { runTutorChat } from "../server/tutorChat.js";
 
@@ -21,17 +23,11 @@ if (existsSync(localPath)) dotenv.config({ path: localPath, override: true });
 
 const PORT = Number(process.env.PORT || 8787);
 
-function cors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
   let pathname = url.pathname.replace(/\/$/, "") || "/";
 
-  cors(res);
+  setDemocrazyCorsHeaders(res);
 
   if (pathname !== "/api/simulation/turn" && pathname !== "/api/assistant/chat") {
     res.statusCode = 404;
@@ -53,13 +49,8 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  const raw = Buffer.concat(chunks).toString("utf8");
-  let parsed;
-  try {
-    parsed = raw ? JSON.parse(raw) : {};
-  } catch {
+  const parsed = await parseJsonBodyOnce(req);
+  if (!parsed || typeof parsed !== "object") {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ ok: false, error: "Expected JSON body" }));
@@ -68,7 +59,7 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname === "/api/simulation/turn") {
     const result = await runAgenticTurn(parsed);
-    const statusCode = result.ok ? 200 : result.statusCode ?? 500;
+    const statusCode = result.ok ? 200 : (result.statusCode ?? 500);
     res.statusCode = statusCode;
     res.setHeader("Content-Type", "application/json");
     if (result.ok) {
@@ -83,7 +74,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   const tutor = await runTutorChat(parsed);
-  const statusCode = tutor.ok ? 200 : tutor.statusCode ?? 500;
+  const statusCode = tutor.ok ? 200 : (tutor.statusCode ?? 500);
   res.statusCode = statusCode;
   res.setHeader("Content-Type", "application/json");
   if (tutor.ok) {

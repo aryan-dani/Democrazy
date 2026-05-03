@@ -48,11 +48,12 @@ export async function postSimulationTurn(payload) {
     }
     if (retryAfterSec == null && res.status === 503) {
       retryAfterSec =
-        code === "NO_API_KEY" ? FALLBACK_RETRY_SEC.NO_API_KEY : FALLBACK_RETRY_SEC.MODEL_UNAVAILABLE;
+        code === "NO_API_KEY"
+          ? FALLBACK_RETRY_SEC.NO_API_KEY
+          : FALLBACK_RETRY_SEC.MODEL_UNAVAILABLE;
     }
 
-    const message =
-      typeof json?.error === "string" ? json.error : `Request failed (${res.status})`;
+    const message = typeof json?.error === "string" ? json.error : `Request failed (${res.status})`;
 
     throw new SimulationApiError(message, {
       status: res.status,

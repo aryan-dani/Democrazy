@@ -12,8 +12,7 @@ export const PACK_BRIEFS = {
       "Avoid spreading election misinformation",
     ],
     maxTurns: 10,
-    tone:
-      "Second-person immersive civic education. Practical, neutral, accurate. Encourage verifying with official election websites.",
+    tone: "Second-person immersive civic education. Practical, neutral, accurate. Encourage verifying with official election websites.",
   },
   "local-civic": {
     theme:
@@ -24,8 +23,7 @@ export const PACK_BRIEFS = {
       "Participate effectively in hearings and petitions",
     ],
     maxTurns: 10,
-    tone:
-      "Grounded municipal civics scenarios. Neutral, pragmatic, cite reading agendas and clerk offices — not invented legal citations.",
+    tone: "Grounded municipal civics scenarios. Neutral, pragmatic, cite reading agendas and clerk offices — not invented legal citations.",
   },
   "misinformation-lab": {
     theme:
@@ -36,7 +34,6 @@ export const PACK_BRIEFS = {
       "Use primary sources for procedural facts",
     ],
     maxTurns: 12,
-    tone:
-      "Tense but responsible. Emphasize safety, official sources, and not amplifying dubious claims.",
+    tone: "Tense but responsible. Emphasize safety, official sources, and not amplifying dubious claims.",
   },
 };

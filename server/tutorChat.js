@@ -1,7 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { classifyGeminiFailure } from "./geminiErrors.js";
 
-const QUICK_CHIPS_FALLBACK = ["What is NOTA?", "What is a polling booth?", "What if I'm not on the voter list?"];
+const QUICK_CHIPS_FALLBACK = [
+  "What is NOTA?",
+  "What is a polling booth?",
+  "What if I'm not on the voter list?",
+];
 
 /** @typedef {{ role:'user'|'model'; parts:{text:string}[] }} GeminiContentPart */
 
@@ -57,7 +61,8 @@ Always output VALID JSON ONLY: {"reply": string, "followUps": string[]}
 Never use markdown fences.
 `.trim();
 
-  const modelName = process.env.GEMINI_TUTOR_MODEL || process.env.GEMINI_MODEL || "gemini-2.0-flash";
+  const modelName =
+    process.env.GEMINI_TUTOR_MODEL || process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
   /** @typedef {{role:string; content:string}} Incoming */
   /** @type {Incoming[]} */
@@ -91,7 +96,7 @@ Never use markdown fences.
     const text =
       typeof result.response?.text === "function"
         ? result.response.text()
-        : result.response?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") ?? "";
+        : (result.response?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") ?? "");
     if (!text.trim()) {
       return {
         ok: false,

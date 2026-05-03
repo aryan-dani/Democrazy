@@ -49,8 +49,7 @@ export function useSimulation(steps) {
   const resetSimulation = useCallback(
     (opts = {}) => {
       const max = Math.max(steps.length - 1, 0);
-      const raw =
-        typeof opts.startAt === "number" ? Math.min(Math.max(opts.startAt, 0), max) : 0;
+      const raw = typeof opts.startAt === "number" ? Math.min(Math.max(opts.startAt, 0), max) : 0;
       const at = opts.startAt === "last" ? max : raw;
       setCurrentStep(at);
       setSelectedOption(null);

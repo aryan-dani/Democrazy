@@ -204,23 +204,24 @@ export function ProgressProvider({ children }) {
 
       const classicMerged = { ...(prev.classicSessionByPack ?? {}) };
       const remClassic =
-        remotePartial.classicSessionByPack &&
-        typeof remotePartial.classicSessionByPack === "object"
+        remotePartial.classicSessionByPack && typeof remotePartial.classicSessionByPack === "object"
           ? remotePartial.classicSessionByPack
           : {};
       for (const [pid, sess] of Object.entries(remClassic)) {
         const rStep =
           sess && typeof sess === "object" && typeof sess.step === "number" ? sess.step : 0;
         const local = classicMerged[pid];
-        if (!local || rStep > local.step)
-          classicMerged[pid] = { step: rStep, at: sess?.at };
+        if (!local || rStep > local.step) classicMerged[pid] = { step: rStep, at: sess?.at };
       }
 
       const remoteLast = remotePartial.lastQuizScore
         ? normalizeQuizEntry(remotePartial.lastQuizScore)
         : null;
       let lastQuizScore = prev.lastQuizScore;
-      if (remoteLast && (!lastQuizScore || Date.parse(remoteLast.date) > Date.parse(lastQuizScore.date)))
+      if (
+        remoteLast &&
+        (!lastQuizScore || Date.parse(remoteLast.date) > Date.parse(lastQuizScore.date))
+      )
         lastQuizScore = remoteLast;
 
       let quizScores = [...prev.quizScores];
@@ -328,8 +329,7 @@ export function ProgressProvider({ children }) {
     setProgress(withReconciledBadges(defaultProgressShape(), {}));
   }, []);
 
-  const total =
-    progress.simulationTotal > 0 ? progress.simulationTotal : longestPackScenarioCount;
+  const total = progress.simulationTotal > 0 ? progress.simulationTotal : longestPackScenarioCount;
   const simulationPercent = Math.round(
     (Math.min(progress.simulationCompleted, total) / total) * 100,
   );

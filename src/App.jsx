@@ -1,14 +1,17 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import LandingPage from "./pages/LandingPage";
-import SimulationPage from "./pages/SimulationPage";
-import QuizPage from "./pages/QuizPage";
-import DashboardPage from "./pages/DashboardPage";
-import TimelinePage from "./pages/TimelinePage";
 import FirestoreProgressBridge from "./components/FirestoreProgressBridge";
 import AIChatDrawer from "./components/AIChatDrawer";
+import LoadingState from "./components/LoadingState";
 import { ProgressProvider } from "./hooks/useProgress";
 import { AuthProvider } from "./context/AuthContext";
+
+const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
+const SimulationPage = lazy(() => import("./pages/SimulationPage.jsx"));
+const QuizPage = lazy(() => import("./pages/QuizPage.jsx"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
+const TimelinePage = lazy(() => import("./pages/TimelinePage.jsx"));
 
 export default function App() {
   return (
@@ -16,14 +19,27 @@ export default function App() {
       <ProgressProvider>
         <FirestoreProgressBridge />
         <BrowserRouter>
+          <a href="#main-content" className="skip-to-content">
+            Skip to content
+          </a>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/simulation" element={<SimulationPage />} />
-            <Route path="/timeline" element={<TimelinePage />} />
-            <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-          </Routes>
+          <main id="main-content" tabIndex={-1}>
+            <Suspense
+              fallback={
+                <div className="dc-route-fallback">
+                  <LoadingState label="Loading page..." />
+                </div>
+              }
+            >
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/simulation" element={<SimulationPage />} />
+                <Route path="/timeline" element={<TimelinePage />} />
+                <Route path="/quiz" element={<QuizPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+              </Routes>
+            </Suspense>
+          </main>
           <AIChatDrawer />
         </BrowserRouter>
       </ProgressProvider>

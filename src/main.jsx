@@ -6,8 +6,8 @@ import { initThemeDocument } from "./utils/themeStorage.js";
 
 initThemeDocument();
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <App />
   </StrictMode>,
-)
+);

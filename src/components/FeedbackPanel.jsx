@@ -22,7 +22,9 @@ export default function FeedbackPanel({
       aria-live="polite"
     >
       <div className="feedback-header">
-        <span className={`material-symbols-outlined feedback-icon ${isCorrect === true ? "dc-animate-check" : ""}`}>
+        <span
+          className={`material-symbols-outlined feedback-icon ${isCorrect === true ? "dc-animate-check" : ""}`}
+        >
           {coachMode ? "psychology_alt" : isCorrect ? "emoji_events" : "error_outline"}
         </span>
         <h3 className="feedback-title">
@@ -32,7 +34,9 @@ export default function FeedbackPanel({
 
       <div className="feedback-body">
         <div className="feedback-immediate">
-          <h4>{coachMode ? "Ripple effects" : quizMode ? "Immediate feedback" : "What happened"}</h4>
+          <h4>
+            {coachMode ? "Ripple effects" : quizMode ? "Immediate feedback" : "What happened"}
+          </h4>
           <p>{feedback}</p>
         </div>
 

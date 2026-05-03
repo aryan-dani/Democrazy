@@ -20,7 +20,12 @@ function scheduleRetryAfter(err) {
   ) {
     return Date.now() + err.retryAfterSec * 1000;
   }
-  if (err.status === 403 || err.code === "AUTH" || err.code === "MODEL_NOT_FOUND" || err.code === "NO_API_KEY") {
+  if (
+    err.status === 403 ||
+    err.code === "AUTH" ||
+    err.code === "MODEL_NOT_FOUND" ||
+    err.code === "NO_API_KEY"
+  ) {
     return 0;
   }
   if (err.status === 429 || err.code === "RATE_LIMIT") {
@@ -33,9 +38,7 @@ function scheduleRetryAfter(err) {
 }
 
 export function useAgenticSimulation({ packId, enabled }) {
-  const [scene, setScene] = useState(
-    /** @type { Partial<AgentTurnFace> | null } */ (null),
-  );
+  const [scene, setScene] = useState(/** @type { Partial<AgentTurnFace> | null } */ (null));
   const [worldState, setWorldState] = useState(seedWorldState);
   const [maxTurns, setMaxTurns] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -163,7 +166,13 @@ export function useAgenticSimulation({ packId, enabled }) {
 
   const chooseOption = useCallback(
     async (index) => {
-      if (!enabled || loading || completed || (agentError && !offlineMode) || !scene?.options?.[index]) {
+      if (
+        !enabled ||
+        loading ||
+        completed ||
+        (agentError && !offlineMode) ||
+        !scene?.options?.[index]
+      ) {
         return;
       }
 

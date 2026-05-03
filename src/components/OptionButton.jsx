@@ -29,11 +29,17 @@ export default function OptionButton({
       disabled={disabled}
       id={`option-button-${index}`}
       type="button"
+      aria-label={`Option ${letter}: ${text}`}
+      aria-pressed={isAgentVariant ? isSelected : undefined}
     >
-      <span className="option-letter">{letter}</span>
-      <span className="option-text">{text}</span>
+      <span className="option-letter" aria-hidden>
+        {letter}
+      </span>
+      <span className="option-text" aria-hidden>
+        {text}
+      </span>
       {!isAgentVariant && showFeedback && isSelected && (
-        <span className="material-symbols-outlined option-icon">
+        <span className="material-symbols-outlined option-icon" aria-hidden>
           {isCorrect ? "check_circle" : "cancel"}
         </span>
       )}

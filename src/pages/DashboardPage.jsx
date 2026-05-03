@@ -41,7 +41,7 @@ export default function DashboardPage() {
   }, [progress.quizScores]);
 
   const simulationTotal =
-    progress.simulationTotal > 0 ? progress.simulationTotal : scenarioPacks[0]?.steps.length ?? 8;
+    progress.simulationTotal > 0 ? progress.simulationTotal : (scenarioPacks[0]?.steps.length ?? 8);
 
   const resumeTarget = useMemo(() => {
     const visit = progress.lastSimulationVisit;
@@ -65,7 +65,8 @@ export default function DashboardPage() {
         <div>
           <h1 className="dashboard-title">Dashboard</h1>
           <p className="dashboard-subtitle">
-            Activities sync in this browser. Sign in with Google to mirror progress to Firestore when Firebase env vars are configured.
+            Activities sync in this browser. Sign in with Google to mirror progress to Firestore
+            when Firebase env vars are configured.
           </p>
           {progress.lastSimulationVisit?.packId && (
             <p className="dashboard-subnote">
@@ -132,7 +133,11 @@ export default function DashboardPage() {
           ) : (
             <div className="dash-badge-grid">
               {(progress.badges ?? []).map((id) => (
-                <BadgeCard key={id} badgeId={id} unlockedAt={progress.badgeUnlocksAt?.[id] ?? null} />
+                <BadgeCard
+                  key={id}
+                  badgeId={id}
+                  unlockedAt={progress.badgeUnlocksAt?.[id] ?? null}
+                />
               ))}
             </div>
           )}

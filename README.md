@@ -39,24 +39,45 @@ If `VITE_API_ORIGIN` is empty, the app uses **same-origin** requests (default wi
 
 ## Environment variables
 
-| Variable | Scope | Purpose |
-| -------- | ----- | ------- |
-| `GEMINI_API_KEY` | Server (Vite middleware locally, Vercel function in prod) | Required for adaptive simulation + tutor. |
-| `GEMINI_MODEL` | Server | Optional model override (default in `.env.example`: `gemini-2.0-flash`). |
-| `VITE_API_ORIGIN` | Client build | Optional absolute API origin (e.g. split dev API). Omit for relative `/api/...`. |
-| `VITE_FIREBASE_*` | Client only (`VITE_` prefixed) | Optional Firebase Auth + Firestore mirror; omit to run fully local/offline UX. |
-| `VITE_GA_MEASUREMENT_ID` | Client | Optional GA4; `trackEvent()` no-ops without it. |
+| Variable                 | Scope                                                     | Purpose                                                                            |
+| ------------------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `GEMINI_API_KEY`         | Server (Vite middleware locally, Vercel function in prod) | Required for adaptive simulation + tutor.                                          |
+| `GEMINI_MODEL`           | Server                                                    | Optional model override (default in `.env.example`: `gemini-2.0-flash`).           |
+| `VITE_API_ORIGIN`        | Client build                                              | Optional absolute API origin (e.g. split dev API). Omit for relative `/api/...`.   |
+| `VITE_FIREBASE_*`        | Client only (`VITE_` prefixed)                            | Optional Firebase Auth + Firestore mirror; omit to run fully local/offline UX.     |
+| `VITE_GA_MEASUREMENT_ID` | Client                                                    | Optional GA4; `trackEvent()` no-ops without it.                                    |
+| `DEMOCRAZY_CORS_ORIGIN`  | Server (`api/*`, Vite middleware, `scripts/dev-api.mjs`)  | Optional `Access-Control-Allow-Origin`; defaults to `*` when unset (dev-friendly). |
+
+**`GEMINI_API_KEY`** is loaded only on the server (Vercel handlers, dev middleware, `dev-api.mjs`). It must never be prefixed with `VITE_` and is not shipped in the SPA bundle.
 
 Copy **`.env.example`** → **`.env`** and fill secrets locally. Optionally add **`.env.local`** for machine-specific overrides (also gitignored). **Do not commit** `.env` or any file containing real keys.
 
 ## Scripts
 
-| Command | Description |
-| ------- | ----------- |
-| `npm run dev` | Vite dev server + in-process Gemini API middleware. |
-| `npm run dev:split` | Concurrently: Vite + `scripts/dev-api.mjs`. |
-| `npm run build` | TypeScript check (`tsc`) + production bundle to `dist/`. |
-| `npm run preview` | Preview the production build locally. |
+| Command                 | Description                                               |
+| ----------------------- | --------------------------------------------------------- |
+| `npm run dev`           | Vite dev server + in-process Gemini API middleware.       |
+| `npm run dev:split`     | Concurrently: Vite + `scripts/dev-api.mjs`.               |
+| `npm run lint`          | ESLint (flat config) on `src/`, `server/`, and config.    |
+| `npm run lint:fix`      | ESLint with `--fix`.                                      |
+| `npm run format`        | Prettier write.                                           |
+| `npm run format:check`  | Prettier CI check.                                        |
+| `npm test`              | Vitest unit/integration tests.                            |
+| `npm run test:coverage` | Vitest with V8 coverage thresholds (also used in CI).     |
+| `npm run build`         | TypeScript (`tsc` on typed entry shims) + Vite → `dist/`. |
+| `npm run preview`       | Preview the production build locally.                     |
+
+## Learning outcomes ↔ product areas
+
+| Experience            | What learners practice                                     |
+| --------------------- | ---------------------------------------------------------- |
+| Classic simulation    | Scripted voter journey, tradeoffs, pack-specific themes.   |
+| Adaptive (Gemini) sim | JSON-grounded AI consequences with server-side guardrails. |
+| Timeline              | Election phases and sequencing literacy.                   |
+| Quizzes               | Knowledge checks tied to sim context.                      |
+| Dashboard + badges    | Progress, motivation, revisit weak areas.                  |
+| Civic tutor           | Short, non-partisan Q&A via `/api/assistant/chat`.         |
+| Optional Firebase     | Account + cloud progress mirror with user-scoped docs.     |
 
 ## Deploying on Vercel
 
@@ -65,7 +86,7 @@ Copy **`.env.example`** → **`.env`** and fill secrets locally. Optionally add 
    - `GEMINI_API_KEY` — **Production** (and Preview if needed).
    - Optional: `GEMINI_MODEL`.
    - Client: any `VITE_*` vars you rely on (`VITE_FIREBASE_*`, `VITE_GA_MEASUREMENT_ID`).
-3. The repository includes **`api/simulation/turn.js`** and **`api/assistant/chat.js`** as Vercel Serverless/API routes alongside `vercel.json` (SPA build → `dist`).
+3. The repository includes **`api/simulation/turn.js`** and **`api/assistant/chat.js`** as Vercel Serverless/API routes alongside `vercel.json` (SPA build → `dist`). Production responses also pick up baseline **`vercel.json` security headers** (e.g. `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options`). For same-origin SPA+API setups, tighten CORS by setting **`DEMOCRAZY_CORS_ORIGIN`** to your site origin.
 
 After deploy, confirm:
 

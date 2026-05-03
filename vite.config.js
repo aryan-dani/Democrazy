@@ -1,3 +1,5 @@
+/// <reference types="vitest/config" />
+
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -6,6 +8,8 @@ import dotenv from "dotenv";
 import { defineConfig } from "vite";
 import { runAgenticTurn } from "./server/agenticTurn.js";
 import { runTutorChat } from "./server/tutorChat.js";
+import { parseJsonBodyOnce } from "./server/parseJsonBodyOnce.js";
+import { setDemocrazyCorsHeaders } from "./server/httpCors.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,26 +25,6 @@ function loadDemocrazyEnv() {
 }
 
 loadDemocrazyEnv();
-
-async function parseJsonBody(req) {
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(chunk);
-  }
-  const raw = Buffer.concat(chunks).toString("utf8");
-  if (!raw) return {};
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-function cors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
 
 function democrazyDevApiMiddleware() {
   return {
@@ -59,7 +43,7 @@ function democrazyDevApiMiddleware() {
           return;
         }
 
-        cors(res);
+        setDemocrazyCorsHeaders(res);
 
         if (req.method === "OPTIONS") {
           res.statusCode = 204;
@@ -74,7 +58,7 @@ function democrazyDevApiMiddleware() {
           return;
         }
 
-        const parsed = await parseJsonBody(req);
+        const parsed = await parseJsonBodyOnce(req);
         if (parsed === null) {
           res.statusCode = 400;
           res.setHeader("Content-Type", "application/json");
@@ -84,7 +68,7 @@ function democrazyDevApiMiddleware() {
 
         if (pathOnly === "/api/simulation/turn") {
           const result = await runAgenticTurn(parsed);
-          const statusCode = result.ok ? 200 : result.statusCode ?? 500;
+          const statusCode = result.ok ? 200 : (result.statusCode ?? 500);
           res.statusCode = statusCode;
           res.setHeader("Content-Type", "application/json");
           if (result.ok) {
@@ -99,7 +83,7 @@ function democrazyDevApiMiddleware() {
         }
 
         const tutor = await runTutorChat(parsed);
-        const statusCode = tutor.ok ? 200 : tutor.statusCode ?? 500;
+        const statusCode = tutor.ok ? 200 : (tutor.statusCode ?? 500);
         res.statusCode = statusCode;
         res.setHeader("Content-Type", "application/json");
         if (tutor.ok) {
@@ -123,4 +107,22 @@ function democrazyDevApiMiddleware() {
 
 export default defineConfig({
   plugins: [democrazyDevApiMiddleware()],
+  test: {
+    globals: false,
+    environment: "node",
+    setupFiles: ["./vitest.setup.js"],
+    environmentMatchGlobs: [["src/**/*.test.{jsx,tsx}", "jsdom"]],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      include: ["server/**/*.js", "src/**/*.{js,jsx}"],
+      exclude: ["**/*.test.*", "**/__tests__/**", "scripts/**"],
+      thresholds: {
+        statements: 14,
+        branches: 16,
+        lines: 15,
+        functions: 7,
+      },
+    },
+  },
 });

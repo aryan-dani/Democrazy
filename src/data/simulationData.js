@@ -71,7 +71,10 @@ export const quizQuestions = [
     question: "What is a 'down-ballot' race?",
     options: [
       { text: "A race that only happens during midterm elections", correct: false },
-      { text: "Elections for local and state offices listed below the presidential race on the ballot", correct: true },
+      {
+        text: "Elections for local and state offices listed below the presidential race on the ballot",
+        correct: true,
+      },
       { text: "A special election called by the governor", correct: false },
       { text: "A runoff election between two candidates", correct: false },
     ],
@@ -83,7 +86,10 @@ export const quizQuestions = [
     question: "What is the safest first step before sharing sensational election screenshots?",
     options: [
       { text: "Share immediately with 'could be fake' disclaimers", correct: false },
-      { text: "Trace the screenshot to primary sources published by administrators", correct: true },
+      {
+        text: "Trace the screenshot to primary sources published by administrators",
+        correct: true,
+      },
       { text: "DM it to election officials anonymously without context", correct: false },
       { text: "Crop out timestamps so it spreads faster", correct: false },
     ],
@@ -130,7 +136,8 @@ export const timelineStages = [
     id: 1,
     title: "Announcement",
     icon: "campaign",
-    quickExample: "Election offices publish calendars and deadlines so voters know where to verify registration.",
+    quickExample:
+      "Election offices publish calendars and deadlines so voters know where to verify registration.",
     description:
       "The electoral commission officially declares the election dates, guidelines, and registration periods.",
     status: "completed",
@@ -190,7 +197,8 @@ export const timelineStages = [
     id: 5,
     title: "Results",
     icon: "emoji_events",
-    quickExample: "Certification happens publicly; losers concede transitions while audits continue behind the scenes.",
+    quickExample:
+      "Certification happens publicly; losers concede transitions while audits continue behind the scenes.",
     description:
       "Official winners are announced and preparations for the transition of power begin.",
     status: "upcoming",

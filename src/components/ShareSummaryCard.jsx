@@ -62,7 +62,9 @@ export default function ShareSummaryCard({ title, headline, scoreLabel, sublabel
         ) : (
           <p className="share-sub">Earn badges via simulations & quizzes.</p>
         )}
-        <span className="share-footnote">Practice voting safely — verify with official resources.</span>
+        <span className="share-footnote">
+          Practice voting safely — verify with official resources.
+        </span>
       </div>
       <div className="share-actions">
         <button type="button" className="btn-secondary-hero" onClick={download}>

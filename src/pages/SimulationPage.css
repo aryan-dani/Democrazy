@@ -344,7 +344,9 @@
 }
 
 @media (max-width: 900px) {
-  .simulation-page { flex-direction: column; }
+  .simulation-page {
+    flex-direction: column;
+  }
   .simulation-sidebar {
     width: 100%;
     min-width: unset;

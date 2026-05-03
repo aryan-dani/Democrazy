@@ -38,6 +38,4 @@ export function pickPackSteps(packId) {
   return pack?.steps ?? electionPrepSteps;
 }
 
-export const longestPackScenarioCount = Math.max(
-  ...scenarioPacks.map((p) => p.steps.length),
-);
+export const longestPackScenarioCount = Math.max(...scenarioPacks.map((p) => p.steps.length));

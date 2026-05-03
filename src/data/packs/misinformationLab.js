@@ -31,8 +31,7 @@ export const misinformationLabSteps = [
       "Generative fakery concentrates near Election Day audio channels; slow down, originate verification yourself.",
     didYouKnow:
       "Some jurisdictions pilot signed SMS updates — enroll only via official onboarding.",
-    pitfall:
-      "Emotional urgency disables skeptical pause — attackers bank on scarcity mindset.",
+    pitfall: "Emotional urgency disables skeptical pause — attackers bank on scarcity mindset.",
   },
   {
     id: 15,
@@ -43,8 +42,7 @@ export const misinformationLabSteps = [
       {
         text: "Screenshot and blast 'potential fraud'",
         correct: false,
-        feedback:
-          "Second-order rumors metastasize when screenshots strip context URLs.",
+        feedback: "Second-order rumors metastasize when screenshots strip context URLs.",
       },
       {
         text: "Locate the official curing/rejection FAQs PDF posted by your locality and quote the pertinent rule",
@@ -55,16 +53,14 @@ export const misinformationLabSteps = [
       {
         text: "Assume it's true and skip mailing",
         correct: false,
-        feedback:
-          "Disenfranchising yourself prematurely hands victory to rumor architects.",
+        feedback: "Disenfranchising yourself prematurely hands victory to rumor architects.",
       },
     ],
     explanation:
       "Ballot curing rules evolve — citing admin PDF snippets helps friends internalize nuances.",
     didYouKnow:
       "Neutral hotlines staffed by librarians sometimes collate SOS links hourly pre-election.",
-    pitfall:
-      "Conflicting advice from partisan influencers masquerading as 'lawyers'",
+    pitfall: "Conflicting advice from partisan influencers masquerading as 'lawyers'",
   },
   {
     id: 16,
@@ -87,14 +83,12 @@ export const misinformationLabSteps = [
       {
         text: "Blame strangers online without evidence",
         correct: false,
-        feedback:
-          "Document facts first; escalating publicly without timelines can amplify chaos.",
+        feedback: "Document facts first; escalating publicly without timelines can amplify chaos.",
       },
     ],
     explanation:
       "'Receipt culture' clashes with secrecy goals—understand WHY photography rules exist.",
-    didYouKnow:
-      "Historical vote buying targeted visible proof—modern analog is photo leaks.",
+    didYouKnow: "Historical vote buying targeted visible proof—modern analog is photo leaks.",
     pitfall:
       "Youth-heavy campaigns sometimes gamify selfies—verify official guidance before joining trends.",
   },
@@ -107,8 +101,7 @@ export const misinformationLabSteps = [
       {
         text: "Argue temperamentally—you feel turnout is epic",
         correct: false,
-        feedback:
-          "Feelings duel feelings; authoritative datasets adjudicate responsibly.",
+        feedback: "Feelings duel feelings; authoritative datasets adjudicate responsibly.",
       },
       {
         text: "Open raw releases from administering bodies/academic repositories charting longitudinal turnout",
@@ -119,16 +112,14 @@ export const misinformationLabSteps = [
       {
         text: "Do nothing—they should feel bad",
         correct: false,
-        feedback:
-          "Apathy spirals amplify engineered demoralization—kind counter-evidence heals.",
+        feedback: "Apathy spirals amplify engineered demoralization—kind counter-evidence heals.",
       },
     ],
     explanation:
       "Graph literacy overlaps civic health—teach skepticism proportional to sensational framing.",
     didYouKnow:
       "Youth turnout fluctuates materially by GOTV modality—context matters geographically.",
-    pitfall:
-      "Cherrypicked single precinct screenshots masquerading as national truth.",
+    pitfall: "Cherrypicked single precinct screenshots masquerading as national truth.",
   },
   {
     id: 18,
@@ -139,8 +130,7 @@ export const misinformationLabSteps = [
       {
         text: "Refresh rogue aggregators obsessively overnight",
         correct: false,
-        feedback:
-          "Sleep deprivation + sampling illiteracy births snap judgments.",
+        feedback: "Sleep deprivation + sampling illiteracy births snap judgments.",
       },
       {
         text: "Review how administering bodies embargo early precinct patterns and diversify inputs",
@@ -151,15 +141,12 @@ export const misinformationLabSteps = [
       {
         text: "Call random strangers alleging fraud prematurely",
         correct: false,
-        feedback:
-          "Premature fraud narratives harm workers tabulating legitimately slowly.",
+        feedback: "Premature fraud narratives harm workers tabulating legitimately slowly.",
       },
     ],
     explanation:
       "Statistical temperament is patriotic patience—election science communication matters.",
-    didYouKnow:
-      "Confidence intervals exist for a reason—watch for pundits omitting margins.",
-    pitfall:
-      "Horse-race serotonin addiction displaces local action opportunities.",
+    didYouKnow: "Confidence intervals exist for a reason—watch for pundits omitting margins.",
+    pitfall: "Horse-race serotonin addiction displaces local action opportunities.",
   },
 ];

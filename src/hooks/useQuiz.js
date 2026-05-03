@@ -87,9 +87,7 @@ export function useQuiz(questions) {
     isComplete,
     currentQuestionData: questions[currentQuestion] || null,
     totalQuestions: questions.length,
-    progress: Math.round(
-      ((currentQuestion + (showFeedback ? 1 : 0)) / questions.length) * 100,
-    ),
+    progress: Math.round(((currentQuestion + (showFeedback ? 1 : 0)) / questions.length) * 100),
     percentage: Math.round((score / questions.length) * 100),
     handleOptionClick,
     handleNextQuestion,

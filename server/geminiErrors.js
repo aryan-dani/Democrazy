@@ -36,7 +36,8 @@ export function classifyGeminiFailure(err) {
     return {
       statusCode: 503,
       code: "MODEL_UNAVAILABLE",
-      error: "Gemini reports it is overloaded right now. Try again shortly or continue without the AI.",
+      error:
+        "Gemini reports it is overloaded right now. Try again shortly or continue without the AI.",
       retryAfterSec: retryAfterSec ?? 30,
     };
   }
@@ -45,7 +46,8 @@ export function classifyGeminiFailure(err) {
     return {
       statusCode: 403,
       code: "AUTH",
-      error: "The API key was rejected. Check GEMINI_API_KEY in your .env (or Vercel env) and restart the dev server.",
+      error:
+        "The API key was rejected. Check GEMINI_API_KEY in your .env (or Vercel env) and restart the dev server.",
     };
   }
 
@@ -70,7 +72,8 @@ export function classifyGeminiFailure(err) {
   return {
     statusCode: 502,
     code: "UNKNOWN",
-    error: "Something went wrong talking to Gemini. You can retry, use offline practice, or scripted mode.",
+    error:
+      "Something went wrong talking to Gemini. You can retry, use offline practice, or scripted mode.",
     retryAfterSec: 8,
   };
 }

@@ -10,7 +10,8 @@ export default function TimelinePage() {
         <span className="timeline-pill">Explorer</span>
         <h1>Election timeline</h1>
         <p className="timeline-lede">
-          Tap each stage for a beginner-friendly rundown plus a micro-scenario — no cramming paragraphs.
+          Tap each stage for a beginner-friendly rundown plus a micro-scenario — no cramming
+          paragraphs.
         </p>
         <div className="timeline-hero-links">
           <Link className="btn-primary-hero" to="/simulation?mode=classic">
@@ -36,8 +37,8 @@ export default function TimelinePage() {
       </div>
 
       <p className="timeline-footnote">
-        Status labels in curated data illustrate story pacing — not personally tracked completion unless you tie them later to
-        dashboards.
+        Status labels in curated data illustrate story pacing — not personally tracked completion
+        unless you tie them later to dashboards.
       </p>
     </div>
   );

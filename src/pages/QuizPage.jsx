@@ -109,7 +109,11 @@ export default function QuizPage() {
             <button className="btn-primary-hero" onClick={handleRetake} type="button">
               <span>Retake quiz</span>
             </button>
-            <button className="btn-secondary-hero" onClick={() => navigate("/dashboard")} type="button">
+            <button
+              className="btn-secondary-hero"
+              onClick={() => navigate("/dashboard")}
+              type="button"
+            >
               <span>View dashboard</span>
             </button>
           </div>
@@ -179,8 +183,8 @@ export default function QuizPage() {
         <div className="quiz-score-strip">
           <span className="material-symbols-outlined">scoreboard</span>
           <span>
-            Score {score}/{totalQuestions} · answered {Math.min(currentQuestion + (showFeedback ? 1 : 0), totalQuestions)}/
-            {totalQuestions}
+            Score {score}/{totalQuestions} · answered{" "}
+            {Math.min(currentQuestion + (showFeedback ? 1 : 0), totalQuestions)}/{totalQuestions}
           </span>
         </div>
       </div>
