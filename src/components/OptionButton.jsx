@@ -1,6 +1,21 @@
+import { memo } from "react";
 import "./OptionButton.css";
 
-export default function OptionButton({
+/**
+ * Reusable button for quiz and simulation options.
+ * Handles styling for selected, correct, and incorrect states.
+ *
+ * @param {Object} props
+ * @param {string} props.text - The text of the option.
+ * @param {number} props.index - The index of the option (used for letter mapping A, B, etc).
+ * @param {boolean} props.isSelected - Whether the user has selected this option.
+ * @param {boolean} [props.isCorrect] - Whether the option is correct (classic/quiz modes).
+ * @param {boolean} props.showFeedback - Whether to show correctness feedback.
+ * @param {boolean} props.disabled - Whether the button is disabled.
+ * @param {Function} props.onClick - Click handler, receives the index.
+ * @param {"classic"|"agent"} [props.variant="classic"] - The visual variant to use.
+ */
+const OptionButton = memo(function OptionButton({
   text,
   index,
   isSelected,
@@ -30,7 +45,7 @@ export default function OptionButton({
       id={`option-button-${index}`}
       type="button"
       aria-label={`Option ${letter}: ${text}`}
-      aria-pressed={isAgentVariant ? isSelected : undefined}
+      aria-pressed={isSelected}
     >
       <span className="option-letter" aria-hidden>
         {letter}
@@ -45,4 +60,6 @@ export default function OptionButton({
       )}
     </button>
   );
-}
+});
+
+export default OptionButton;

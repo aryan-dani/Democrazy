@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { scenarioPacks, timelineStages } from "../data/simulationData";
 import { useProgress } from "../hooks/useProgress";
@@ -41,7 +41,7 @@ export default function DashboardPage() {
   }, [progress.quizScores]);
 
   const simulationTotal =
-    progress.simulationTotal > 0 ? progress.simulationTotal : (scenarioPacks[0]?.steps.length ?? 8);
+    progress.simulationTotal > 0 ? progress.simulationTotal : (scenarioPacks[0]?.stepCount ?? 8);
 
   const resumeTarget = useMemo(() => {
     const visit = progress.lastSimulationVisit;
@@ -58,6 +58,14 @@ export default function DashboardPage() {
   const lastQuizDisplay = progress.lastQuizScore
     ? `${progress.lastQuizScore.score}/${progress.lastQuizScore.total}`
     : "—";
+
+  const handleResume = useCallback(() => {
+    navigate(resumeTarget);
+  }, [navigate, resumeTarget]);
+
+  const handleQuizLaunch = useCallback(() => {
+    navigate("/quiz");
+  }, [navigate]);
 
   return (
     <div className="dashboard-page" id="dashboard-page">
@@ -83,7 +91,7 @@ export default function DashboardPage() {
             </p>
           )}
         </div>
-        <button className="btn-primary-hero" onClick={() => navigate(resumeTarget)} type="button">
+        <button className="btn-primary-hero" onClick={handleResume} type="button">
           <span>Open simulations</span>
           <span className="material-symbols-outlined">arrow_forward</span>
         </button>
@@ -204,7 +212,7 @@ export default function DashboardPage() {
               ))
             )}
           </div>
-          <button className="btn-text" onClick={() => navigate("/quiz")} type="button">
+          <button className="btn-text" onClick={handleQuizLaunch} type="button">
             Launch quiz →
           </button>
         </div>

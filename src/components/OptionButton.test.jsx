@@ -71,8 +71,9 @@ describe("OptionButton", () => {
         onClick={() => {}}
       />,
     );
-    expect(screen.getByRole("button", { name: "Option A: Yes" })).not.toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Option A: Yes" })).toHaveAttribute(
       "aria-pressed",
+      "false",
     );
   });
 });

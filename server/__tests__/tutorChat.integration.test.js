@@ -26,6 +26,36 @@ describe("runTutorChat (mocked Gemini SDK)", () => {
     vi.unstubAllEnvs();
   });
 
+  it("handles quiz_explain mode with guarded JSON remediation", async () => {
+    mockGenerateContent.mockResolvedValueOnce({
+      response: {
+        text: () =>
+          JSON.stringify({
+            reply:
+              "Option 1 misreads the Constitutional path; option 0 tracks how electors are allocated.",
+            followUps: ["What is certification?", "How do recount rules vary by state?"],
+          }),
+      },
+    });
+
+    const result = await runTutorChat({
+      mode: "quiz_explain",
+      question: "How is the presidency decided?",
+      explanation: "Electoral votes finalize the presidency; national trackers are descriptive.",
+      options: [
+        { text: "Electoral votes from state contests", correct: true },
+        { text: "Whoever cable networks project first nationally", correct: false },
+      ],
+      chosenIndex: 1,
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.reply).toContain("Option 1");
+      expect(result.suggestedChips[0]).toContain("certification");
+    }
+  });
+
   it("parses reply and followUps chips", async () => {
     mockGenerateContent.mockResolvedValueOnce({
       response: {

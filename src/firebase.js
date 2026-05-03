@@ -1,4 +1,7 @@
-import { initializeApp, getApps } from "firebase/app";
+/**
+ * Firebase is loaded on-demand (dynamic import) so the main bundle stays smaller
+ * until Google sync / Firestore paths actually run.
+ */
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -9,10 +12,28 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-export const firebaseReady = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
+/** @returns {boolean} */
+export function isFirebaseConfigured() {
+  return Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
+}
 
-export const firebaseApp = firebaseReady
-  ? getApps().length > 0
-    ? getApps()[0]
-    : initializeApp(firebaseConfig)
-  : null;
+/** @type {Promise<import('firebase/app').FirebaseApp | null> | null} */
+let appPromise = null;
+
+/**
+ * Lazily initializes (once) and returns the Firebase app, or null if env is incomplete.
+ * @returns {Promise<import('firebase/app').FirebaseApp | null>}
+ */
+export function loadFirebaseApp() {
+  if (!isFirebaseConfigured()) {
+    return Promise.resolve(null);
+  }
+  if (!appPromise) {
+    appPromise = import("firebase/app").then(({ initializeApp, getApps }) => {
+      const existing = getApps()[0];
+      if (existing) return existing;
+      return initializeApp(firebaseConfig);
+    });
+  }
+  return appPromise;
+}

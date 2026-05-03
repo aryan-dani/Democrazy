@@ -1,4 +1,4 @@
-﻿import {
+import {
   createContext,
   createElement,
   useCallback,
@@ -364,6 +364,10 @@ export function ProgressProvider({ children }) {
   return createElement(ProgressContext.Provider, { value: api }, children);
 }
 
+/**
+ * Hook to access and mutate the user's progress state from the ProgressProvider context.
+ * Used for saving quiz scores, recording completed simulations, and tracking badges.
+ */
 export function useProgress() {
   const ctx = useContext(ProgressContext);
   if (!ctx) {

@@ -69,15 +69,15 @@ Copy **`.env.example`** → **`.env`** and fill secrets locally. Optionally add 
 
 ## Learning outcomes ↔ product areas
 
-| Experience            | What learners practice                                     |
-| --------------------- | ---------------------------------------------------------- |
-| Classic simulation    | Scripted voter journey, tradeoffs, pack-specific themes.   |
-| Adaptive (Gemini) sim | JSON-grounded AI consequences with server-side guardrails. |
-| Timeline              | Election phases and sequencing literacy.                   |
-| Quizzes               | Knowledge checks tied to sim context.                      |
-| Dashboard + badges    | Progress, motivation, revisit weak areas.                  |
-| Civic tutor           | Short, non-partisan Q&A via `/api/assistant/chat`.         |
-| Optional Firebase     | Account + cloud progress mirror with user-scoped docs.     |
+| Experience            | What learners practice                                                                               |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| Classic simulation    | Scripted voter journeys (`election-prep`, `constitutional-stress`, civic + misinformation packs, …). |
+| Adaptive (Gemini) sim | JSON-grounded AI consequences with server-side guardrails.                                           |
+| Timeline              | Election phases and sequencing literacy.                                                             |
+| Knowledge quizzes     | Guarded checks plus optional Gemini “explain deeper” hooks when you miss something.                  |
+| Dashboard + badges    | Progress, motivation, revisit weak areas.                                                            |
+| Civic tutor           | Short, non-partisan Q&A via `/api/assistant/chat`.                                                   |
+| Optional Firebase     | Account + cloud progress mirror with user-scoped docs.                                               |
 
 ## Deploying on Vercel
 
@@ -93,7 +93,9 @@ After deploy, confirm:
 - `POST /api/simulation/turn`
 - `POST /api/assistant/chat`
 
-respond with JSON (use the Network tab during adaptive mode + tutor FAB).
+  (JSON body: normal tutor uses `messages` + optional `mode`; quiz remediation uses `mode: "quiz_explain"` plus `question`, `explanation`, `options`, `chosenIndex`.)
+
+respond with JSON (use the Network tab during adaptive mode + tutor FAB or after a wrong quiz answer).
 
 ### Firebase (optional)
 

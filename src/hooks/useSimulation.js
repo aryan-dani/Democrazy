@@ -1,5 +1,10 @@
 import { useState, useCallback } from "react";
 
+/**
+ * Core hook for managing state during scripted, non-agentic scenarios.
+ * Controls branching, scoring, and progress persistence for static packs.
+ * @param {Array} steps - The sequenced scenario steps to simulate.
+ */
 export function useSimulation(steps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);

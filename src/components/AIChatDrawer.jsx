@@ -156,6 +156,7 @@ export default function AIChatDrawer() {
         aria-label="Open civic tutor chat"
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-controls="tutor-dialog"
       >
         <span className="material-symbols-outlined" aria-hidden>
           chat
@@ -170,6 +171,7 @@ export default function AIChatDrawer() {
           onClick={(e) => e.target === e.currentTarget && closeDrawer()}
         >
           <div
+            id="tutor-dialog"
             ref={drawerRef}
             className="tutor-drawer"
             role="dialog"
@@ -201,6 +203,7 @@ export default function AIChatDrawer() {
                   type="button"
                   className={`tutor-chip-btn ${mode === "simple" ? "active" : ""}`}
                   onClick={() => setMode("simple")}
+                  aria-pressed={mode === "simple"}
                 >
                   Explain simply
                 </button>
@@ -208,6 +211,7 @@ export default function AIChatDrawer() {
                   type="button"
                   className={`tutor-chip-btn ${mode === "deeper" ? "active" : ""}`}
                   onClick={() => setMode("deeper")}
+                  aria-pressed={mode === "deeper"}
                 >
                   Go deeper
                 </button>
@@ -216,10 +220,25 @@ export default function AIChatDrawer() {
 
             <div className="tutor-scroller">
               {msgs.length === 0 ? (
-                <p className="tutor-intro">
-                  Ask quick questions — NOTA lines, provisional ballots, what happens inside a
-                  polling place, staying calm if you are not on the list.
-                </p>
+                <>
+                  <p className="tutor-intro">
+                    Ask quick questions — NOTA lines, provisional ballots, what happens inside a
+                    polling place, staying calm if you are not on the list.
+                  </p>
+                  <div className="quick-chips">
+                    {chips.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        className="tutor-chip"
+                        onClick={() => sendPrompt(c)}
+                        disabled={loading}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </>
               ) : null}
               {msgs.map((m, idx) => (
                 <div
@@ -234,22 +253,12 @@ export default function AIChatDrawer() {
                   <LoadingState label="Fetching answer..." />
                 </div>
               ) : null}
-              {errorLine ? <div className="bubble error">{errorLine}</div> : null}
+              {errorLine ? (
+                <div className="bubble error" role="alert" aria-live="assertive">
+                  {errorLine}
+                </div>
+              ) : null}
               <div ref={endRef} />
-            </div>
-
-            <div className="quick-chips">
-              {chips.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className="tutor-chip"
-                  onClick={() => sendPrompt(c)}
-                  disabled={loading}
-                >
-                  {c}
-                </button>
-              ))}
             </div>
 
             <form

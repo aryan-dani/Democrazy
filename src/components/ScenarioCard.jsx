@@ -1,6 +1,19 @@
+import { memo } from "react";
 import "./ScenarioCard.css";
 
-export default function ScenarioCard({
+/**
+ * Component to display a scenario step with its options and contextual hints.
+ *
+ * @param {Object} props
+ * @param {Object} props.step - The step object containing the scenario text and id.
+ * @param {string} props.phase - The name of the current simulation phase.
+ * @param {string} [props.didYouKnow] - Optional educational hint.
+ * @param {string} [props.pitfall] - Optional warning about common mistakes.
+ * @param {React.ReactNode} props.children - The options buttons to render.
+ * @param {string} [props.titleOverride] - Optional custom title for the card.
+ * @param {string} [props.coachBanner] - Optional coach feedback to display (agentic mode).
+ */
+const ScenarioCard = memo(function ScenarioCard({
   step,
   phase,
   didYouKnow,
@@ -53,4 +66,6 @@ export default function ScenarioCard({
       </div>
     </div>
   );
-}
+});
+
+export default ScenarioCard;

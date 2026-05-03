@@ -1,18 +1,23 @@
-import { useRef } from "react";
-import { toBlob, toPng } from "html-to-image";
+import { useRef, memo } from "react";
 import "./ShareSummaryCard.css";
 
+async function loadHtmlToImage() {
+  const mod = await import("html-to-image");
+  return { toPng: mod.toPng, toBlob: mod.toBlob };
+}
+
 /**
- * Styled card for OG-like sharing; downloadable PNG via html-to-image.
+ * Styled card for OG-like sharing; downloadable PNG via html-to-image (loaded on demand).
  * @param {{ title:string; headline:string; scoreLabel:string; sublabel?:string; badges?:string[] }} props
  */
-export default function ShareSummaryCard({ title, headline, scoreLabel, sublabel, badges = [] }) {
+const ShareSummaryCard = memo(function ShareSummaryCard({ title, headline, scoreLabel, sublabel, badges = [] }) {
   const ref = useRef(null);
 
   const download = async () => {
     const el = ref.current;
     if (!el) return;
     try {
+      const { toPng } = await loadHtmlToImage();
       const dataUrl = await toPng(el, { pixelRatio: 2, cacheBust: true });
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -27,6 +32,7 @@ export default function ShareSummaryCard({ title, headline, scoreLabel, sublabel
     const el = ref.current;
     if (!el || !navigator.share || !navigator.canShare) return;
     try {
+      const { toBlob, toPng } = await loadHtmlToImage();
       let blob = await toBlob(el, { pixelRatio: 2 });
       if (!blob) {
         const png = await toPng(el, { pixelRatio: 2 });
@@ -78,4 +84,6 @@ export default function ShareSummaryCard({ title, headline, scoreLabel, sublabel
       </div>
     </div>
   );
-}
+});
+
+export default ShareSummaryCard;

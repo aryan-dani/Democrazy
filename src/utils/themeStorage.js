@@ -8,7 +8,7 @@ export function getStoredTheme() {
   } catch {
     /* ignore */
   }
-  return "dark";
+  return "light";
 }
 
 /** @param {"dark"|"light"} theme */
@@ -21,7 +21,7 @@ export function setStoredTheme(theme) {
   document.documentElement.dataset.theme = theme;
 }
 
-/** Init from storage; default dark. */
+/** Init from storage; default light. */
 export function initThemeDocument() {
   const t = getStoredTheme();
   document.documentElement.dataset.theme = t;

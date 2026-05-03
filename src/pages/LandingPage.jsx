@@ -18,7 +18,7 @@ const features = [
   {
     icon: "quiz",
     title: "Knowledge Quizzes",
-    desc: "Test your understanding of voter rights, processes, and civic duties.",
+    desc: "Sharpen civic facts — optional Gemini tutor digs into wrong answers against the scripted explanation.",
   },
   {
     icon: "leaderboard",
@@ -81,11 +81,12 @@ export default function LandingPage() {
           </button>
           <button
             className="btn-secondary-hero"
-            onClick={() => navigate("/dashboard")}
-            id="btn-view-dashboard"
+            onClick={() => navigate("/simulation?mode=classic&pack=constitutional-stress")}
+            id="btn-start-constitutional-pack"
             type="button"
           >
-            <span>View Dashboard</span>
+            <span>Constitutional stress pack</span>
+            <span className="material-symbols-outlined">balance</span>
           </button>
         </div>
         <div className="hero-stats">

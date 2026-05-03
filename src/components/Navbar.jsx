@@ -72,7 +72,9 @@ export default function Navbar() {
         {authEnabled ? (
           <div className="navbar-google">
             {busy ? (
-              <span className="navbar-auth-hint">Signing in…</span>
+              <span className="navbar-auth-hint" aria-live="polite" role="status">
+                Signing in…
+              </span>
             ) : user ? (
               <button
                 type="button"

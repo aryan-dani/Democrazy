@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import FirestoreProgressBridge from "./components/FirestoreProgressBridge";
-import AIChatDrawer from "./components/AIChatDrawer";
 import LoadingState from "./components/LoadingState";
 import { ProgressProvider } from "./hooks/useProgress";
 import { AuthProvider } from "./context/AuthContext";
@@ -12,6 +11,7 @@ const SimulationPage = lazy(() => import("./pages/SimulationPage.jsx"));
 const QuizPage = lazy(() => import("./pages/QuizPage.jsx"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage.jsx"));
 const TimelinePage = lazy(() => import("./pages/TimelinePage.jsx"));
+const AIChatDrawer = lazy(() => import("./components/AIChatDrawer.jsx"));
 
 export default function App() {
   return (
@@ -40,7 +40,9 @@ export default function App() {
               </Routes>
             </Suspense>
           </main>
-          <AIChatDrawer />
+          <Suspense fallback={null}>
+            <AIChatDrawer />
+          </Suspense>
         </BrowserRouter>
       </ProgressProvider>
     </AuthProvider>

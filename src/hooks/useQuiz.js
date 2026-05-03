@@ -1,5 +1,9 @@
 import { useState, useCallback } from "react";
 
+/**
+ * Custom hook to manage the quiz progression, scoring, and feedback state.
+ * @param {Array} questions - Array of quiz question objects.
+ */
 export function useQuiz(questions) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);

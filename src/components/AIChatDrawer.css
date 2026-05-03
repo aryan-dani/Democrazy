@@ -65,6 +65,7 @@
 .tutor-close {
   border: none;
   background: var(--dc-bg-muted);
+  color: var(--dc-text);
   border-radius: 12px;
   padding: 8px;
   cursor: pointer;
@@ -96,6 +97,7 @@
   padding: 8px 12px;
   font-weight: 700;
   background: var(--dc-bg-muted);
+  color: var(--dc-text);
   cursor: pointer;
 }
 
@@ -149,7 +151,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 8px 12px;
 }
 
 .tutor-chip {

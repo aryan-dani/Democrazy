@@ -37,6 +37,13 @@ function scheduleRetryAfter(err) {
   return 0;
 }
 
+/**
+ * Hook for managing dynamic, AI-driven simulation states.
+ * Interacts with Gemini to generate contextual scenarios and handles fallback states.
+ * @param {Object} props
+ * @param {string} props.packId - The ID of the current scenario pack.
+ * @param {boolean} props.enabled - Whether the agentic mode is enabled.
+ */
 export function useAgenticSimulation({ packId, enabled }) {
   const [scene, setScene] = useState(/** @type { Partial<AgentTurnFace> | null } */ (null));
   const [worldState, setWorldState] = useState(seedWorldState);
@@ -98,8 +105,8 @@ export function useAgenticSimulation({ packId, enabled }) {
   }, []);
 
   const hydrateOfflineAt = useCallback(
-    (turnOneBased, priorWs) => {
-      const beat = buildOfflineBeat(packId, turnOneBased, priorWs);
+    async (turnOneBased, priorWs) => {
+      const beat = await buildOfflineBeat(packId, turnOneBased, priorWs);
       if (!beat.ok) {
         setAgentError({ message: beat.error ?? "Offline mode unavailable." });
         return;
@@ -155,7 +162,7 @@ export function useAgenticSimulation({ packId, enabled }) {
     setLoading(false);
 
     const startTurn = scene ? Math.min(worldState.turnIndex + 1, Number.MAX_SAFE_INTEGER) : 1;
-    hydrateOfflineAt(startTurn, worldState);
+    void hydrateOfflineAt(startTurn, worldState);
   }, [hydrateOfflineAt, scene, worldState]);
 
   const restartWithGemini = useCallback(async () => {
@@ -178,7 +185,7 @@ export function useAgenticSimulation({ packId, enabled }) {
 
       if (offlineMode) {
         const nextTurn = worldState.turnIndex + 1;
-        const beat = buildOfflineBeat(packId, nextTurn, worldState);
+        const beat = await buildOfflineBeat(packId, nextTurn, worldState);
         if (!beat.ok) {
           setAgentError({ message: beat.error ?? "Offline step unavailable." });
           return;

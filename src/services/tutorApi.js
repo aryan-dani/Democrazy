@@ -18,9 +18,11 @@ export class TutorApiError extends Error {
 }
 
 /**
- * @param {{ messages: { role: string; content: string }[]; mode?: "simple" | "deeper" }} payload
+ * POST /api/assistant/chat — tutoring chat JSON or quiz-explain payloads.
+ *
+ * @param {Record<string, unknown>} payload
  */
-export async function postTutorMessage(payload) {
+async function postAssistantChat(payload) {
   const res = await fetch(`${apiOrigin()}/api/assistant/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -46,4 +48,27 @@ export async function postTutorMessage(payload) {
     reply: typeof json.reply === "string" ? json.reply : "",
     suggestedChips: Array.isArray(json.suggestedChips) ? json.suggestedChips : [],
   };
+}
+
+/**
+ * @param {{ messages: { role: string; content: string }[]; mode?: "simple" | "deeper" }} payload
+ */
+export async function postTutorMessage(payload) {
+  return postAssistantChat(payload);
+}
+
+/**
+ * @param {{ question: string; explanation: string; options: { text: string; correct?: boolean }[]; chosenIndex: number }} payload
+ */
+export async function postQuizExplain(payload) {
+  return postAssistantChat({
+    mode: "quiz_explain",
+    question: payload.question,
+    explanation: payload.explanation,
+    options: payload.options.map((o) => ({
+      text: o.text,
+      correct: Boolean(o.correct),
+    })),
+    chosenIndex: payload.chosenIndex,
+  });
 }

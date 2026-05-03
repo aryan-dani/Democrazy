@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { postTutorMessage, TutorApiError } from "../tutorApi.js";
+import { postTutorMessage, postQuizExplain, TutorApiError } from "../tutorApi.js";
 
 describe("postTutorMessage", () => {
   beforeEach(() => {
@@ -25,6 +25,31 @@ describe("postTutorMessage", () => {
     expect(fetch).toHaveBeenCalledWith(
       expect.stringMatching(/\/api\/assistant\/chat$/),
       expect.objectContaining({ method: "POST" }),
+    );
+  });
+
+  it("postQuizExplain sends quiz_explain payload", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ ok: true, reply: "Because X", suggestedChips: ["Y"] }),
+    });
+    const out = await postQuizExplain({
+      question: "Q?",
+      explanation: "E.",
+      options: [
+        { text: "a", correct: true },
+        { text: "b", correct: false },
+      ],
+      chosenIndex: 1,
+    });
+    expect(out.reply).toBe("Because X");
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringMatching(/\/api\/assistant\/chat$/),
+      expect.objectContaining({
+        method: "POST",
+        body: expect.stringContaining("quiz_explain"),
+      }),
     );
   });
 

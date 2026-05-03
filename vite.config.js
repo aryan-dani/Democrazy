@@ -107,6 +107,24 @@ function democrazyDevApiMiddleware() {
 
 export default defineConfig({
   plugins: [democrazyDevApiMiddleware()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("react-dom")) return "react-dom";
+          if (id.includes("react-router")) return "router";
+          if (id.includes("react")) return "react-core";
+          if (id.includes("firebase")) return "firebase-vendor";
+          if (id.includes("@google/generative-ai")) return "gemini-sdk";
+          if (id.includes("html-to-image")) return "html-to-image";
+          return undefined;
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
+
   test: {
     globals: false,
     environment: "node",
@@ -116,12 +134,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html"],
       include: ["server/**/*.js", "src/**/*.{js,jsx}"],
-      exclude: ["**/*.test.*", "**/__tests__/**", "scripts/**"],
+      exclude: ["**/*.test.*", "**/__tests__/**", "scripts/**", "src/main.jsx"],
       thresholds: {
-        statements: 14,
-        branches: 16,
-        lines: 15,
-        functions: 7,
+        statements: 50,
+        branches: 41,
+        functions: 48,
+        lines: 52,
       },
     },
   },

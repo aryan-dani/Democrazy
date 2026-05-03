@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { scenarioPacks, pickPackSteps } from "../data/simulationData";
+import { scenarioPacks, loadPackSteps } from "../data/simulationData";
 
 import { useSimulation } from "../hooks/useSimulation";
 import { useAgenticSimulation } from "../hooks/useAgenticSimulation";
@@ -11,6 +11,8 @@ import ScenarioCard from "../components/ScenarioCard";
 import OptionButton from "../components/OptionButton";
 import FeedbackPanel from "../components/FeedbackPanel";
 import ShareSummaryCard from "../components/ShareSummaryCard";
+import LoadingState from "../components/LoadingState";
+import EmptyState from "../components/EmptyState";
 import { trackEvent } from "../utils/analytics";
 import { BADGE_CATALOG } from "../utils/badges";
 import "./SimulationPage.css";
@@ -22,7 +24,7 @@ function resolvePackId(raw) {
   return scenarioPacks[0]?.id ?? "election-prep";
 }
 
-function ScenarioToolbar({ mode, packId, onPackChange, onModeChange }) {
+const ScenarioToolbar = memo(function ScenarioToolbar({ mode, packId, onPackChange, onModeChange }) {
   return (
     <div className="sim-toolbar" aria-label="Simulation controls">
       <div className="sim-toolbar-cluster">
@@ -64,12 +66,84 @@ function ScenarioToolbar({ mode, packId, onPackChange, onModeChange }) {
       </div>
     </div>
   );
-}
+});
 
 function ClassicSimulationExperience({ packId, onAdjustQuery }) {
-  const navigate = useNavigate();
-  const steps = useMemo(() => pickPackSteps(packId), [packId]);
   const packMeta = scenarioPacks.find((p) => p.id === packId) ?? scenarioPacks[0];
+  const [steps, setSteps] = useState([]);
+  const [stepsLoading, setStepsLoading] = useState(true);
+  const [stepsError, setStepsError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setStepsLoading(true);
+    setStepsError(false);
+    loadPackSteps(packId)
+      .then((loaded) => {
+        if (!cancelled) {
+          setSteps(loaded);
+          setStepsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStepsError(true);
+          setStepsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [packId]);
+
+  if (stepsLoading) {
+    return (
+      <div className="sim-page-shell">
+        <ScenarioToolbar
+          mode="classic"
+          packId={packId}
+          onPackChange={(id) => onAdjustQuery(id, "classic")}
+          onModeChange={(next) => onAdjustQuery(packId, next)}
+        />
+        <div className="simulation-page" id="simulation-page">
+          <LoadingState label="Loading scenario pack…" />
+        </div>
+      </div>
+    );
+  }
+
+  if (stepsError || steps.length === 0) {
+    return (
+      <div className="sim-page-shell">
+        <ScenarioToolbar
+          mode="classic"
+          packId={packId}
+          onPackChange={(id) => onAdjustQuery(id, "classic")}
+          onModeChange={(next) => onAdjustQuery(packId, next)}
+        />
+        <div className="simulation-page" id="simulation-page">
+          <EmptyState
+            icon="cloud_off"
+            title="Could not load this pack"
+            hint="Pick another pack from the menu or refresh and try again."
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <ClassicSimulationLoaded
+      packId={packId}
+      packMeta={packMeta}
+      steps={steps}
+      onAdjustQuery={onAdjustQuery}
+    />
+  );
+}
+
+function ClassicSimulationLoaded({ packId, packMeta, steps, onAdjustQuery }) {
+  const navigate = useNavigate();
 
   const {
     currentStep,
@@ -104,7 +178,7 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
     resetSimulation({ startAt: saved });
   }, [packId, steps.length, resetSimulation]);
 
-  const persistClassicAdvance = () => {
+  const persistClassicAdvance = useCallback(() => {
     updateSimulationProgress(currentStep + 1, totalSteps);
     if (currentStep + 1 >= totalSteps) {
       markSimulationComplete(`${packMeta.title} · Classic`);
@@ -112,17 +186,26 @@ function ClassicSimulationExperience({ packId, onAdjustQuery }) {
     } else {
       saveClassicPackStep(packId, currentStep + 1);
     }
-  };
+  }, [
+    currentStep,
+    totalSteps,
+    packMeta.title,
+    packId,
+    updateSimulationProgress,
+    markSimulationComplete,
+    clearClassicPackSession,
+    saveClassicPackStep,
+  ]);
 
-  const handleNextScripted = () => {
+  const handleNextScripted = useCallback(() => {
     persistClassicAdvance();
     handleNextStep();
-  };
+  }, [persistClassicAdvance, handleNextStep]);
 
-  const handleContinueWithMistake = () => {
+  const handleContinueWithMistake = useCallback(() => {
     persistClassicAdvance();
     handleContinueAnyway();
-  };
+  }, [persistClassicAdvance, handleContinueAnyway]);
 
   useEffect(() => {
     if (!isComplete) return;
@@ -311,11 +394,28 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
     maxTurns,
     offlineMode,
     packMeta.title,
+    packId,
     updateSimulationProgress,
     worldState.turnIndex,
   ]);
 
   const blockingError = Boolean(agentError && !offlineMode);
+
+  const handlePackChangeComplete = useCallback((id) => onAdjustQuery(id, "agent"), [onAdjustQuery]);
+  const handleModeChangeComplete = useCallback((next) => onAdjustQuery(packId, next), [packId, onAdjustQuery]);
+  const handlePackChange = useCallback((id) => onAdjustQuery(id, "agent"), [onAdjustQuery]);
+  const handleModeChange = useCallback((next) => onAdjustQuery(packId, next), [packId, onAdjustQuery]);
+
+  const handleAdaptiveChoice = useCallback(
+    async (idx) => {
+      if (loading || blockingError) {
+        return;
+      }
+      setChosenOptionIdx(idx);
+      await chooseOption(idx);
+    },
+    [loading, blockingError, chooseOption],
+  );
 
   if (completed) {
     return (
@@ -323,8 +423,8 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
         <ScenarioToolbar
           mode="agent"
           packId={packId}
-          onPackChange={(id) => onAdjustQuery(id, "agent")}
-          onModeChange={(next) => onAdjustQuery(packId, next)}
+          onPackChange={handlePackChangeComplete}
+          onModeChange={handleModeChangeComplete}
         />
         <div className="simulation-page" id="simulation-page">
           <div className="simulation-complete">
@@ -362,14 +462,6 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
     );
   }
 
-  const handleAdaptiveChoice = async (idx) => {
-    if (loading || blockingError) {
-      return;
-    }
-    setChosenOptionIdx(idx);
-    await chooseOption(idx);
-  };
-
   const trust = typeof worldState.trustScore === "number" ? worldState.trustScore : "--";
   const rumor = typeof worldState.rumorExposure === "number" ? worldState.rumorExposure : "--";
   const stateStrip = `Trust ${trust} • Rumors ${rumor}`;
@@ -389,8 +481,8 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
       <ScenarioToolbar
         mode="agent"
         packId={packId}
-        onPackChange={(id) => onAdjustQuery(id, "agent")}
-        onModeChange={(next) => onAdjustQuery(packId, next)}
+        onPackChange={handlePackChange}
+        onModeChange={handleModeChange}
       />
       <div className="simulation-page" id="simulation-page">
         <div className="simulation-sidebar">
@@ -412,7 +504,7 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
             </div>
           )}
           {agentError && !offlineMode && (
-            <div className="sim-alert" role="alert">
+            <div className="sim-alert" role="alert" aria-live="assertive">
               {agentError.code ? (
                 <span className="sim-error-code">{agentError.code.replace(/_/g, " ")}</span>
               ) : null}
@@ -469,7 +561,7 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
 
         <div className="simulation-main agent-main">
           {loading && !scene && (
-            <div className="sim-loading" role="status">
+            <div className="sim-loading" role="status" aria-live="polite">
               Gemini is authoring your dilemma…
             </div>
           )}
@@ -501,7 +593,7 @@ function AgentSimulationExperience({ packId, onAdjustQuery }) {
           )}
 
           {loading && scene && (
-            <div className="sim-soft-loading" aria-live="polite">
+            <div className="sim-soft-loading" role="status" aria-live="polite">
               Updating storyline…
             </div>
           )}
@@ -521,12 +613,15 @@ export default function SimulationPage() {
     rememberSimulationVisit({ mode, packId });
   }, [mode, packId, rememberSimulationVisit]);
 
-  const handleAdjustQuery = (nextPack, nextMode = mode) => {
-    const qp = new URLSearchParams(params);
-    qp.set("pack", resolvePackId(nextPack));
-    qp.set("mode", nextMode === "agent" ? "agent" : "classic");
-    setParams(qp, { replace: true });
-  };
+  const handleAdjustQuery = useCallback(
+    (nextPack, nextMode = mode) => {
+      const qp = new URLSearchParams(params);
+      qp.set("pack", resolvePackId(nextPack));
+      qp.set("mode", nextMode === "agent" ? "agent" : "classic");
+      setParams(qp, { replace: true });
+    },
+    [mode, params, setParams],
+  );
 
   if (mode === "agent") {
     return (

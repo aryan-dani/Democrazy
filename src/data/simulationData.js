@@ -1,19 +1,25 @@
 import {
+  scenarioPackCatalog,
   scenarioPacks,
-  simulationSteps,
-  pickPackSteps,
+  loadPackSteps,
   countScenariosAcrossPacks,
   longestPackScenarioCount,
 } from "./packs/registry.js";
 
-export { scenarioPacks, simulationSteps, pickPackSteps, longestPackScenarioCount };
+export {
+  scenarioPackCatalog,
+  scenarioPacks,
+  loadPackSteps,
+  countScenariosAcrossPacks,
+  longestPackScenarioCount,
+};
 
 export function getLandingHeroStats() {
   return {
-    scenarios: countScenariosAcrossPacks(scenarioPacks),
+    scenarios: countScenariosAcrossPacks(scenarioPackCatalog),
     quizzes: quizQuestions.length,
     timelineStages: timelineStages.length,
-    packs: scenarioPacks.length,
+    packs: scenarioPackCatalog.length,
   };
 }
 

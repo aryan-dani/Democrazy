@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { quizQuestions } from "../data/simulationData";
 import { useQuiz } from "../hooks/useQuiz";
@@ -6,6 +6,7 @@ import { useProgress } from "../hooks/useProgress";
 import ProgressBar from "../components/ProgressBar";
 import OptionButton from "../components/OptionButton";
 import FeedbackPanel from "../components/FeedbackPanel";
+import QuizWrongExplainCallout from "../components/QuizWrongExplainCallout";
 import ShareSummaryCard from "../components/ShareSummaryCard";
 import { BADGE_CATALOG } from "../utils/badges";
 import { trackEvent } from "../utils/analytics";
@@ -52,19 +53,19 @@ export default function QuizPage() {
     });
   }, [isComplete, score, totalQuestions, addQuizScore]);
 
-  const resetRun = () => {
+  const resetRun = useCallback(() => {
     scoreRecorded.current = false;
     startedAt.current = Date.now();
     resetQuiz();
-  };
+  }, [resetQuiz]);
 
-  const onNextCorrect = () => {
+  const onNextCorrect = useCallback(() => {
     handleNextQuestion();
-  };
+  }, [handleNextQuestion]);
 
-  const handleRetake = () => {
+  const handleRetake = useCallback(() => {
     resetRun();
-  };
+  }, [resetRun]);
 
   if (isComplete) {
     const finalPercent = Math.round((score / totalQuestions) * 100);
@@ -178,6 +179,19 @@ export default function QuizPage() {
               nextLabel={currentQuestion + 1 >= totalQuestions ? "See results" : "Next question"}
             />
           )}
+
+          {showFeedback &&
+          !isCorrect &&
+          selectedOption !== null &&
+          currentQuestionData?.explanation ? (
+            <QuizWrongExplainCallout
+              key={`explain-${currentQuestionData.id}-${selectedOption}`}
+              question={currentQuestionData.question}
+              explanation={currentQuestionData.explanation}
+              options={currentQuestionData.options}
+              chosenIndex={selectedOption}
+            />
+          ) : null}
         </div>
 
         <div className="quiz-score-strip">

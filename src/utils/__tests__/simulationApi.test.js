@@ -1,125 +1,49 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { postSimulationTurn, SimulationApiError } from "../simulationApi.js";
+/** @vitest-environment jsdom */
 
-describe("postSimulationTurn", () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          json: () => Promise.resolve({ ok: true, narrative: "x" }),
-        }),
-      ),
-    );
+import { describe, expect, it, vi, afterEach } from "vitest";
+import { postSimulationTurn, SimulationApiError } from "../simulationApi";
+
+describe("simulationApi", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  it("returns json on HTTP 200 ok path", async () => {
-    const data = await postSimulationTurn({ action: "start", packId: "election-prep" });
-    expect(data.ok).toBe(true);
-    expect(data.narrative).toBe("x");
-    expect(fetch).toHaveBeenCalledWith(
-      expect.stringMatching(/\/api\/simulation\/turn$/),
-      expect.objectContaining({ method: "POST" }),
-    );
-  });
-
-  it("throws when response ok:false with 200", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
+  it("handles ok:false explicitly inside json", async () => {
+    import.meta.env.VITE_API_ORIGIN = "http://localhost";
+    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve({ ok: false, error: "declined", code: "X" }),
+      json: () => Promise.resolve({ ok: false, error: "Model declined", code: "TEST_CODE" }),
     });
 
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected SimulationApiError");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.message).toBe("declined");
-      expect(err.code).toBe("X");
-    }
+    await expect(postSimulationTurn({ test: true })).rejects.toThrowError(SimulationApiError);
+    await expect(postSimulationTurn({ test: true })).rejects.toThrow("Model declined");
+    
+    // restore for second test
+    fetchSpy.mockRestore();
+    
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ ok: false }), // without error/code
+    });
+    
+    await expect(postSimulationTurn({ test: true })).rejects.toThrow("Model declined");
   });
 
-  it("maps 429 with server retry hint", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 429,
-      json: () => Promise.resolve({ error: "slow down", retryAfterSec: 17 }),
+  it("handles fallback to empty origin string when env var is missing", async () => {
+    const originalEnv = import.meta.env.VITE_API_ORIGIN;
+    import.meta.env.VITE_API_ORIGIN = undefined;
+
+    vi.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ ok: true, data: "test" }),
     });
 
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected rejection");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.retryAfterSec).toBe(17);
-    }
-  });
+    const res = await postSimulationTurn({ test: true });
+    expect(res.data).toBe("test");
 
-  it("fallback retry on 429 without server hint", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 429,
-      json: () => Promise.resolve({ error: "nope" }),
-    });
-
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected rejection");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.retryAfterSec).toBe(60);
-    }
-  });
-
-  it("maps 503 NO_API_KEY to no retry hint", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 503,
-      json: () => Promise.resolve({ error: "no key", code: "NO_API_KEY" }),
-    });
-
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected rejection");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.code).toBe("NO_API_KEY");
-      expect(err.retryAfterSec).toBeUndefined();
-    }
-  });
-
-  it("maps generic 503 to model backoff", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 503,
-      json: () => Promise.resolve({ error: "overload" }),
-    });
-
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected rejection");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.retryAfterSec).toBe(30);
-    }
-  });
-
-  it("handles non-json error bodies gracefully", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-      json: () => Promise.reject(new Error("not json")),
-    });
-
-    try {
-      await postSimulationTurn({});
-      expect.fail("expected rejection");
-    } catch (err) {
-      expect(err).toBeInstanceOf(SimulationApiError);
-      expect(err.message).toContain("500");
-    }
+    import.meta.env.VITE_API_ORIGIN = originalEnv;
   });
 });

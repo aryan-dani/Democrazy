@@ -1,6 +1,22 @@
+import { memo } from "react";
 import "./FeedbackPanel.css";
 
-export default function FeedbackPanel({
+/**
+ * Component to display correctness feedback or agentic coach notes.
+ * Provides actions to retry or proceed.
+ *
+ * @param {Object} props
+ * @param {boolean} [props.isCorrect] - Whether the user's answer was correct.
+ * @param {string} [props.feedback] - The primary feedback text.
+ * @param {string} [props.explanation] - Additional details or rationale.
+ * @param {Function} [props.onRetry] - Handler for retrying the question.
+ * @param {Function} [props.onNext] - Handler for advancing to the next step.
+ * @param {string} props.nextLabel - The label for the next button.
+ * @param {"classic"|"agent"|"quiz"} [props.variant="classic"] - Visual variant.
+ * @param {Function} [props.onContinueAnyway] - Handler for skipping correction (quiz mode).
+ * @param {string} [props.continueAnywayLabel="Continue anyway"] - Label for the skip button.
+ */
+const FeedbackPanel = memo(function FeedbackPanel({
   isCorrect,
   feedback,
   explanation,
@@ -24,6 +40,7 @@ export default function FeedbackPanel({
       <div className="feedback-header">
         <span
           className={`material-symbols-outlined feedback-icon ${isCorrect === true ? "dc-animate-check" : ""}`}
+          aria-hidden="true"
         >
           {coachMode ? "psychology_alt" : isCorrect ? "emoji_events" : "error_outline"}
         </span>
@@ -57,13 +74,13 @@ export default function FeedbackPanel({
         ) : (
           <div className="feedback-recovery-actions">
             <button className="btn-retry" onClick={onRetry} id="btn-retry" type="button">
-              <span className="material-symbols-outlined">refresh</span>
+              <span className="material-symbols-outlined" aria-hidden="true">refresh</span>
               <span>Try again</span>
             </button>
             {typeof onContinueAnyway === "function" ? (
               <button className="btn-continue-soft" type="button" onClick={onContinueAnyway}>
                 <span>{continueAnywayLabel}</span>
-                <span className="material-symbols-outlined">arrow_forward</span>
+                <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
               </button>
             ) : null}
           </div>
@@ -71,4 +88,6 @@ export default function FeedbackPanel({
       </div>
     </div>
   );
-}
+});
+
+export default FeedbackPanel;
